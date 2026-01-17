@@ -10,6 +10,8 @@ before(async () => {
   await initWasm();
 });
 
+const flushAsync = () => new Promise<void>((resolve) => setTimeout(resolve, 0));
+
 describe("Form Runtime", () => {
   describe("Form Creation", () => {
     it("should create form with default values", () => {
@@ -68,7 +70,7 @@ describe("Form Runtime", () => {
       assert.strictEqual(form.touched.email, true);
     });
 
-    it("should validate field on change when enabled", () => {
+    it("should validate field on change when enabled", async () => {
       const schema = r.object({
         email: r.string().email(),
       });
@@ -81,13 +83,15 @@ describe("Form Runtime", () => {
       });
 
       form.setValue("email", "invalid");
+      await flushAsync();
       assert(form.errors.email !== null);
 
       form.setValue("email", "valid@example.com");
+      await flushAsync();
       assert.strictEqual(form.errors.email, null);
     });
 
-    it("should validate field on blur when enabled", () => {
+    it("should validate field on blur when enabled", async () => {
       const schema = r.object({
         email: r.string().email(),
       });
@@ -101,12 +105,13 @@ describe("Form Runtime", () => {
 
       assert.strictEqual(form.errors.email, null);
       form.handleBlur("email");
+      await flushAsync();
       assert(form.errors.email !== null);
     });
   });
 
   describe("Form Validation", () => {
-    it("should validate entire form", () => {
+    it("should validate entire form", async () => {
       const schema = r.object({
         name: r.string().min(2),
         email: r.string().email(),
@@ -118,12 +123,12 @@ describe("Form Runtime", () => {
         onSubmit: () => {},
       });
 
-      const errors = form.validateForm();
+      const errors = await form.validateForm();
       assert(errors.name !== null);
       assert(errors.email !== null);
     });
 
-    it("should update isValid flag", () => {
+    it("should update isValid flag", async () => {
       const schema = r.object({
         name: r.string().min(2),
       });
@@ -136,16 +141,16 @@ describe("Form Runtime", () => {
       });
 
       // Validate with invalid data
-      const errors1 = form.validateForm();
+      const errors1 = await form.validateForm();
       assert(Object.values(errors1).some((e) => e !== null));
 
       // Set valid value and validate
       form.setValue("name", "John");
-      const errors2 = form.validateForm();
+      const errors2 = await form.validateForm();
       assert(Object.values(errors2).every((e) => e === null));
     });
 
-    it("should validate specific field path", () => {
+    it("should validate specific field path", async () => {
       const schema = r.object({
         name: r.string().min(2),
         email: r.string().email(),
@@ -157,10 +162,10 @@ describe("Form Runtime", () => {
         onSubmit: () => {},
       });
 
-      const nameError = form.validateField("name");
+      const nameError = await form.validateField("name");
       assert.strictEqual(nameError, null);
 
-      const emailError = form.validateField("email");
+      const emailError = await form.validateField("email");
       assert(emailError !== null);
     });
   });
@@ -209,20 +214,23 @@ describe("Form Runtime", () => {
 
     it("should set isSubmitting flag during submission", async () => {
       const schema = r.object({ name: r.string() });
+      let wasSubmittingDuringSubmit = false;
 
       const form = createForm({
         schema,
         defaultValues: { name: "John" },
         onSubmit: async () => {
+          wasSubmittingDuringSubmit = form.isSubmitting;
           await new Promise((resolve) => setTimeout(resolve, 10));
         },
       });
 
       const submitPromise = form.handleSubmit();
-      // isSubmitting should be true during submission
+      await flushAsync();
       assert.strictEqual(form.isSubmitting, true);
 
       await submitPromise;
+      assert.strictEqual(wasSubmittingDuringSubmit, true);
       assert.strictEqual(form.isSubmitting, false);
     });
 
@@ -380,7 +388,7 @@ describe("Form Runtime", () => {
   });
 
   describe("Complex Forms", () => {
-    it("should handle multi-field forms", () => {
+    it("should handle multi-field forms", async () => {
       const schema = r.object({
         username: r.string().min(3),
         email: r.string().email(),
@@ -404,14 +412,14 @@ describe("Form Runtime", () => {
       form.setValue("age", 25);
       form.setValue("agreed", true);
 
-      const errors = form.validateForm();
+      const errors = await form.validateForm();
       assert.strictEqual(errors.username, null);
       assert.strictEqual(errors.email, null);
       assert.strictEqual(errors.age, null);
       assert.strictEqual(errors.agreed, null);
     });
 
-    it("should handle nested validation errors", () => {
+    it("should handle nested validation errors", async () => {
       const schema = r.object({
         user: r.object({
           name: r.string().min(2),
@@ -427,7 +435,7 @@ describe("Form Runtime", () => {
         onSubmit: () => {},
       });
 
-      const errors = form.validateForm();
+      const errors = await form.validateForm();
       assert(Object.values(errors).some((e) => e !== null));
     });
   });

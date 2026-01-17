@@ -1,11 +1,11 @@
-# Rust-JS Validator
+# Rustica
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.3-blue)](https://www.typescriptlang.org/)
 [![Rust](https://img.shields.io/badge/Rust-1.70+-orange)](https://www.rust-lang.org/)
 [![WebAssembly](https://img.shields.io/badge/WebAssembly-✓-blueviolet)](https://webassembly.org/)
 
-Production-grade Zod-like schema and form validation system powered by Rust and WebAssembly.
+Production-grade schema and form validation system powered by Rust and WebAssembly.
 
 ## ✨ Features
 
@@ -68,6 +68,7 @@ npm install rustica
 import { r, useWasmForm } from 'rustica';
 
 // Define schema with optional custom error messages
+// WASM auto-initializes on first validation - no setup needed!
 const loginSchema = r.object({
   email: r.string()
     .min(3)
@@ -88,7 +89,7 @@ const loginSchema = r.object({
 // Infer types
 type LoginForm = r.Infer<typeof loginSchema>;
 
-// Use in React
+// Use in React - works immediately!
 function LoginForm() {
   const form = useWasmForm({
     schema: loginSchema,
@@ -111,6 +112,10 @@ function LoginForm() {
   );
 }
 ```
+
+**Note**: WASM auto-initializes on the first validation call. For eager loading (optional), you can manually call `await initWasm()` at app startup.
+
+````
 
 ## Custom Error Messages (Optional)
 
@@ -145,7 +150,7 @@ const formSchema = r
     invalid_type: "Form data must be an object",
     required: "This field is required",
   });
-```
+````
 
 **Available message keys by type:**
 

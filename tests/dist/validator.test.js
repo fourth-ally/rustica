@@ -53,6 +53,7 @@ node_test_1.before(function () { return __awaiter(void 0, void 0, void 0, functi
         }
     });
 }); });
+var flushAsync = function () { return new Promise(function (resolve) { return setTimeout(resolve, 0); }); };
 node_test_1.describe("Schema Builders", function () {
     node_test_1.test("r.string() creates string schema", function () {
         var schema = index_1.r.string();
@@ -104,180 +105,461 @@ node_test_1.describe("Schema Builders", function () {
     });
 });
 node_test_1.describe("String Validation", function () {
-    node_test_1.test("validates valid string", function () {
-        var schema = index_1.r.string();
-        var result = index_1.Validator.validate(schema, "hello");
-        node_assert_1["default"].strictEqual(result.success, true);
-    });
-    node_test_1.test("rejects non-string", function () {
+    node_test_1.test("validates valid string", function () { return __awaiter(void 0, void 0, void 0, function () {
+        var schema, result;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0:
+                    schema = index_1.r.string();
+                    return [4 /*yield*/, index_1.Validator.validate(schema, "hello")];
+                case 1:
+                    result = _a.sent();
+                    node_assert_1["default"].strictEqual(result.success, true);
+                    return [2 /*return*/];
+            }
+        });
+    }); });
+    node_test_1.test("rejects non-string", function () { return __awaiter(void 0, void 0, void 0, function () {
+        var schema, result;
         var _a;
-        var schema = index_1.r.string();
-        var result = index_1.Validator.validate(schema, 123);
-        node_assert_1["default"].strictEqual(result.success, false);
-        node_assert_1["default"](((_a = result.errors) === null || _a === void 0 ? void 0 : _a[0].code) === "invalid_type");
-    });
-    node_test_1.test("validates min length", function () {
-        var schema = index_1.r.string().min(5);
-        node_assert_1["default"].strictEqual(index_1.Validator.validate(schema, "hello").success, true);
-        node_assert_1["default"].strictEqual(index_1.Validator.validate(schema, "hi").success, false);
-    });
-    node_test_1.test("validates max length", function () {
-        var schema = index_1.r.string().max(5);
-        node_assert_1["default"].strictEqual(index_1.Validator.validate(schema, "hello").success, true);
-        node_assert_1["default"].strictEqual(index_1.Validator.validate(schema, "toolong").success, false);
-    });
-    node_test_1.test("validates email", function () {
-        var schema = index_1.r.string().email();
-        node_assert_1["default"].strictEqual(index_1.Validator.validate(schema, "test@example.com").success, true);
-        node_assert_1["default"].strictEqual(index_1.Validator.validate(schema, "invalid").success, false);
-    });
-    node_test_1.test("validates URL", function () {
-        var schema = index_1.r.string().url();
-        node_assert_1["default"].strictEqual(index_1.Validator.validate(schema, "https://example.com").success, true);
-        node_assert_1["default"].strictEqual(index_1.Validator.validate(schema, "not-a-url").success, false);
-    });
+        return __generator(this, function (_b) {
+            switch (_b.label) {
+                case 0:
+                    schema = index_1.r.string();
+                    return [4 /*yield*/, index_1.Validator.validate(schema, 123)];
+                case 1:
+                    result = _b.sent();
+                    node_assert_1["default"].strictEqual(result.success, false);
+                    node_assert_1["default"](((_a = result.errors) === null || _a === void 0 ? void 0 : _a[0].code) === "invalid_type");
+                    return [2 /*return*/];
+            }
+        });
+    }); });
+    node_test_1.test("validates min length", function () { return __awaiter(void 0, void 0, void 0, function () {
+        var schema, _a, _b, _c, _d;
+        return __generator(this, function (_e) {
+            switch (_e.label) {
+                case 0:
+                    schema = index_1.r.string().min(5);
+                    _b = (_a = node_assert_1["default"]).strictEqual;
+                    return [4 /*yield*/, index_1.Validator.validate(schema, "hello")];
+                case 1:
+                    _b.apply(_a, [(_e.sent()).success, true]);
+                    _d = (_c = node_assert_1["default"]).strictEqual;
+                    return [4 /*yield*/, index_1.Validator.validate(schema, "hi")];
+                case 2:
+                    _d.apply(_c, [(_e.sent()).success, false]);
+                    return [2 /*return*/];
+            }
+        });
+    }); });
+    node_test_1.test("validates max length", function () { return __awaiter(void 0, void 0, void 0, function () {
+        var schema, _a, _b, _c, _d;
+        return __generator(this, function (_e) {
+            switch (_e.label) {
+                case 0:
+                    schema = index_1.r.string().max(5);
+                    _b = (_a = node_assert_1["default"]).strictEqual;
+                    return [4 /*yield*/, index_1.Validator.validate(schema, "hello")];
+                case 1:
+                    _b.apply(_a, [(_e.sent()).success, true]);
+                    _d = (_c = node_assert_1["default"]).strictEqual;
+                    return [4 /*yield*/, index_1.Validator.validate(schema, "toolong")];
+                case 2:
+                    _d.apply(_c, [(_e.sent()).success, false]);
+                    return [2 /*return*/];
+            }
+        });
+    }); });
+    node_test_1.test("validates email", function () { return __awaiter(void 0, void 0, void 0, function () {
+        var schema, _a, _b, _c, _d;
+        return __generator(this, function (_e) {
+            switch (_e.label) {
+                case 0:
+                    schema = index_1.r.string().email();
+                    _b = (_a = node_assert_1["default"]).strictEqual;
+                    return [4 /*yield*/, index_1.Validator.validate(schema, "test@example.com")];
+                case 1:
+                    _b.apply(_a, [(_e.sent()).success, true]);
+                    _d = (_c = node_assert_1["default"]).strictEqual;
+                    return [4 /*yield*/, index_1.Validator.validate(schema, "invalid")];
+                case 2:
+                    _d.apply(_c, [(_e.sent()).success, false]);
+                    return [2 /*return*/];
+            }
+        });
+    }); });
+    node_test_1.test("validates URL", function () { return __awaiter(void 0, void 0, void 0, function () {
+        var schema, _a, _b, _c, _d;
+        return __generator(this, function (_e) {
+            switch (_e.label) {
+                case 0:
+                    schema = index_1.r.string().url();
+                    _b = (_a = node_assert_1["default"]).strictEqual;
+                    return [4 /*yield*/, index_1.Validator.validate(schema, "https://example.com")];
+                case 1:
+                    _b.apply(_a, [(_e.sent()).success, true]);
+                    _d = (_c = node_assert_1["default"]).strictEqual;
+                    return [4 /*yield*/, index_1.Validator.validate(schema, "not-a-url")];
+                case 2:
+                    _d.apply(_c, [(_e.sent()).success, false]);
+                    return [2 /*return*/];
+            }
+        });
+    }); });
 });
 node_test_1.describe("Number Validation", function () {
-    node_test_1.test("validates valid number", function () {
-        var schema = index_1.r.number();
-        var result = index_1.Validator.validate(schema, 42);
-        node_assert_1["default"].strictEqual(result.success, true);
-    });
-    node_test_1.test("rejects non-number", function () {
-        var schema = index_1.r.number();
-        var result = index_1.Validator.validate(schema, "not a number");
-        node_assert_1["default"].strictEqual(result.success, false);
-    });
-    node_test_1.test("validates min value", function () {
-        var schema = index_1.r.number().min(10);
-        node_assert_1["default"].strictEqual(index_1.Validator.validate(schema, 15).success, true);
-        node_assert_1["default"].strictEqual(index_1.Validator.validate(schema, 5).success, false);
-    });
-    node_test_1.test("validates max value", function () {
-        var schema = index_1.r.number().max(100);
-        node_assert_1["default"].strictEqual(index_1.Validator.validate(schema, 50).success, true);
-        node_assert_1["default"].strictEqual(index_1.Validator.validate(schema, 150).success, false);
-    });
-    node_test_1.test("validates integer", function () {
-        var schema = index_1.r.number().integer();
-        node_assert_1["default"].strictEqual(index_1.Validator.validate(schema, 42).success, true);
-        node_assert_1["default"].strictEqual(index_1.Validator.validate(schema, 42.5).success, false);
-    });
-    node_test_1.test("validates positive", function () {
-        var schema = index_1.r.number().positive();
-        node_assert_1["default"].strictEqual(index_1.Validator.validate(schema, 5).success, true);
-        node_assert_1["default"].strictEqual(index_1.Validator.validate(schema, -5).success, false);
-        node_assert_1["default"].strictEqual(index_1.Validator.validate(schema, 0).success, false);
-    });
+    node_test_1.test("validates valid number", function () { return __awaiter(void 0, void 0, void 0, function () {
+        var schema, result;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0:
+                    schema = index_1.r.number();
+                    return [4 /*yield*/, index_1.Validator.validate(schema, 42)];
+                case 1:
+                    result = _a.sent();
+                    node_assert_1["default"].strictEqual(result.success, true);
+                    return [2 /*return*/];
+            }
+        });
+    }); });
+    node_test_1.test("rejects non-number", function () { return __awaiter(void 0, void 0, void 0, function () {
+        var schema, result;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0:
+                    schema = index_1.r.number();
+                    return [4 /*yield*/, index_1.Validator.validate(schema, "not a number")];
+                case 1:
+                    result = _a.sent();
+                    node_assert_1["default"].strictEqual(result.success, false);
+                    return [2 /*return*/];
+            }
+        });
+    }); });
+    node_test_1.test("validates min value", function () { return __awaiter(void 0, void 0, void 0, function () {
+        var schema, _a, _b, _c, _d;
+        return __generator(this, function (_e) {
+            switch (_e.label) {
+                case 0:
+                    schema = index_1.r.number().min(10);
+                    _b = (_a = node_assert_1["default"]).strictEqual;
+                    return [4 /*yield*/, index_1.Validator.validate(schema, 15)];
+                case 1:
+                    _b.apply(_a, [(_e.sent()).success, true]);
+                    _d = (_c = node_assert_1["default"]).strictEqual;
+                    return [4 /*yield*/, index_1.Validator.validate(schema, 5)];
+                case 2:
+                    _d.apply(_c, [(_e.sent()).success, false]);
+                    return [2 /*return*/];
+            }
+        });
+    }); });
+    node_test_1.test("validates max value", function () { return __awaiter(void 0, void 0, void 0, function () {
+        var schema, _a, _b, _c, _d;
+        return __generator(this, function (_e) {
+            switch (_e.label) {
+                case 0:
+                    schema = index_1.r.number().max(100);
+                    _b = (_a = node_assert_1["default"]).strictEqual;
+                    return [4 /*yield*/, index_1.Validator.validate(schema, 50)];
+                case 1:
+                    _b.apply(_a, [(_e.sent()).success, true]);
+                    _d = (_c = node_assert_1["default"]).strictEqual;
+                    return [4 /*yield*/, index_1.Validator.validate(schema, 150)];
+                case 2:
+                    _d.apply(_c, [(_e.sent()).success, false]);
+                    return [2 /*return*/];
+            }
+        });
+    }); });
+    node_test_1.test("validates integer", function () { return __awaiter(void 0, void 0, void 0, function () {
+        var schema, _a, _b, _c, _d;
+        return __generator(this, function (_e) {
+            switch (_e.label) {
+                case 0:
+                    schema = index_1.r.number().integer();
+                    _b = (_a = node_assert_1["default"]).strictEqual;
+                    return [4 /*yield*/, index_1.Validator.validate(schema, 42)];
+                case 1:
+                    _b.apply(_a, [(_e.sent()).success, true]);
+                    _d = (_c = node_assert_1["default"]).strictEqual;
+                    return [4 /*yield*/, index_1.Validator.validate(schema, 42.5)];
+                case 2:
+                    _d.apply(_c, [(_e.sent()).success, false]);
+                    return [2 /*return*/];
+            }
+        });
+    }); });
+    node_test_1.test("validates positive", function () { return __awaiter(void 0, void 0, void 0, function () {
+        var schema, _a, _b, _c, _d, _e, _f;
+        return __generator(this, function (_g) {
+            switch (_g.label) {
+                case 0:
+                    schema = index_1.r.number().positive();
+                    _b = (_a = node_assert_1["default"]).strictEqual;
+                    return [4 /*yield*/, index_1.Validator.validate(schema, 5)];
+                case 1:
+                    _b.apply(_a, [(_g.sent()).success, true]);
+                    _d = (_c = node_assert_1["default"]).strictEqual;
+                    return [4 /*yield*/, index_1.Validator.validate(schema, -5)];
+                case 2:
+                    _d.apply(_c, [(_g.sent()).success, false]);
+                    _f = (_e = node_assert_1["default"]).strictEqual;
+                    return [4 /*yield*/, index_1.Validator.validate(schema, 0)];
+                case 3:
+                    _f.apply(_e, [(_g.sent()).success, false]);
+                    return [2 /*return*/];
+            }
+        });
+    }); });
 });
 node_test_1.describe("Boolean Validation", function () {
-    node_test_1.test("validates valid boolean", function () {
-        var schema = index_1.r.boolean();
-        node_assert_1["default"].strictEqual(index_1.Validator.validate(schema, true).success, true);
-        node_assert_1["default"].strictEqual(index_1.Validator.validate(schema, false).success, true);
-    });
-    node_test_1.test("rejects non-boolean", function () {
-        var schema = index_1.r.boolean();
-        node_assert_1["default"].strictEqual(index_1.Validator.validate(schema, "true").success, false);
-        node_assert_1["default"].strictEqual(index_1.Validator.validate(schema, 1).success, false);
-    });
+    node_test_1.test("validates valid boolean", function () { return __awaiter(void 0, void 0, void 0, function () {
+        var schema, _a, _b, _c, _d;
+        return __generator(this, function (_e) {
+            switch (_e.label) {
+                case 0:
+                    schema = index_1.r.boolean();
+                    _b = (_a = node_assert_1["default"]).strictEqual;
+                    return [4 /*yield*/, index_1.Validator.validate(schema, true)];
+                case 1:
+                    _b.apply(_a, [(_e.sent()).success, true]);
+                    _d = (_c = node_assert_1["default"]).strictEqual;
+                    return [4 /*yield*/, index_1.Validator.validate(schema, false)];
+                case 2:
+                    _d.apply(_c, [(_e.sent()).success, true]);
+                    return [2 /*return*/];
+            }
+        });
+    }); });
+    node_test_1.test("rejects non-boolean", function () { return __awaiter(void 0, void 0, void 0, function () {
+        var schema, _a, _b, _c, _d;
+        return __generator(this, function (_e) {
+            switch (_e.label) {
+                case 0:
+                    schema = index_1.r.boolean();
+                    _b = (_a = node_assert_1["default"]).strictEqual;
+                    return [4 /*yield*/, index_1.Validator.validate(schema, "true")];
+                case 1:
+                    _b.apply(_a, [(_e.sent()).success, false]);
+                    _d = (_c = node_assert_1["default"]).strictEqual;
+                    return [4 /*yield*/, index_1.Validator.validate(schema, 1)];
+                case 2:
+                    _d.apply(_c, [(_e.sent()).success, false]);
+                    return [2 /*return*/];
+            }
+        });
+    }); });
 });
 node_test_1.describe("Object Validation", function () {
-    node_test_1.test("validates valid object", function () {
-        var schema = index_1.r.object({
-            name: index_1.r.string(),
-            age: index_1.r.number()
+    node_test_1.test("validates valid object", function () { return __awaiter(void 0, void 0, void 0, function () {
+        var schema, result;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0:
+                    schema = index_1.r.object({
+                        name: index_1.r.string(),
+                        age: index_1.r.number()
+                    });
+                    return [4 /*yield*/, index_1.Validator.validate(schema, { name: "John", age: 30 })];
+                case 1:
+                    result = _a.sent();
+                    node_assert_1["default"].strictEqual(result.success, true);
+                    return [2 /*return*/];
+            }
         });
-        var result = index_1.Validator.validate(schema, { name: "John", age: 30 });
-        node_assert_1["default"].strictEqual(result.success, true);
-    });
-    node_test_1.test("rejects invalid object", function () {
-        var schema = index_1.r.object({
-            name: index_1.r.string(),
-            age: index_1.r.number()
+    }); });
+    node_test_1.test("rejects invalid object", function () { return __awaiter(void 0, void 0, void 0, function () {
+        var schema, result;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0:
+                    schema = index_1.r.object({
+                        name: index_1.r.string(),
+                        age: index_1.r.number()
+                    });
+                    return [4 /*yield*/, index_1.Validator.validate(schema, {
+                            name: "John",
+                            age: "thirty"
+                        })];
+                case 1:
+                    result = _a.sent();
+                    node_assert_1["default"].strictEqual(result.success, false);
+                    return [2 /*return*/];
+            }
         });
-        var result = index_1.Validator.validate(schema, { name: "John", age: "thirty" });
-        node_assert_1["default"].strictEqual(result.success, false);
-    });
-    node_test_1.test("requires all fields", function () {
+    }); });
+    node_test_1.test("requires all fields", function () { return __awaiter(void 0, void 0, void 0, function () {
+        var schema, result;
         var _a;
-        var schema = index_1.r.object({
-            name: index_1.r.string(),
-            age: index_1.r.number()
+        return __generator(this, function (_b) {
+            switch (_b.label) {
+                case 0:
+                    schema = index_1.r.object({
+                        name: index_1.r.string(),
+                        age: index_1.r.number()
+                    });
+                    return [4 /*yield*/, index_1.Validator.validate(schema, { name: "John" })];
+                case 1:
+                    result = _b.sent();
+                    node_assert_1["default"].strictEqual(result.success, false);
+                    node_assert_1["default"]((_a = result.errors) === null || _a === void 0 ? void 0 : _a.some(function (e) { return e.code === "required"; }));
+                    return [2 /*return*/];
+            }
         });
-        var result = index_1.Validator.validate(schema, { name: "John" });
-        node_assert_1["default"].strictEqual(result.success, false);
-        node_assert_1["default"]((_a = result.errors) === null || _a === void 0 ? void 0 : _a.some(function (e) { return e.code === "required"; }));
-    });
-    node_test_1.test("validates nested objects", function () {
-        var schema = index_1.r.object({
-            user: index_1.r.object({
-                name: index_1.r.string(),
-                email: index_1.r.string().email()
-            })
+    }); });
+    node_test_1.test("validates nested objects", function () { return __awaiter(void 0, void 0, void 0, function () {
+        var schema, result;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0:
+                    schema = index_1.r.object({
+                        user: index_1.r.object({
+                            name: index_1.r.string(),
+                            email: index_1.r.string().email()
+                        })
+                    });
+                    return [4 /*yield*/, index_1.Validator.validate(schema, {
+                            user: { name: "John", email: "john@example.com" }
+                        })];
+                case 1:
+                    result = _a.sent();
+                    node_assert_1["default"].strictEqual(result.success, true);
+                    return [2 /*return*/];
+            }
         });
-        var result = index_1.Validator.validate(schema, {
-            user: { name: "John", email: "john@example.com" }
-        });
-        node_assert_1["default"].strictEqual(result.success, true);
-    });
+    }); });
 });
 node_test_1.describe("Path Validation", function () {
-    node_test_1.test("validates at specific path", function () {
-        var schema = index_1.r.object({
-            email: index_1.r.string().email()
+    node_test_1.test("validates at specific path", function () { return __awaiter(void 0, void 0, void 0, function () {
+        var schema, data, result;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0:
+                    schema = index_1.r.object({
+                        email: index_1.r.string().email()
+                    });
+                    data = { email: "test@example.com" };
+                    return [4 /*yield*/, index_1.Validator.validateAtPath(schema, data, ["email"])];
+                case 1:
+                    result = _a.sent();
+                    node_assert_1["default"].strictEqual(result.success, true);
+                    return [2 /*return*/];
+            }
         });
-        var data = { email: "test@example.com" };
-        var result = index_1.Validator.validateAtPath(schema, data, ["email"]);
-        node_assert_1["default"].strictEqual(result.success, true);
-    });
-    node_test_1.test("detects error at specific path", function () {
-        var schema = index_1.r.object({
-            email: index_1.r.string().email()
+    }); });
+    node_test_1.test("detects error at specific path", function () { return __awaiter(void 0, void 0, void 0, function () {
+        var schema, data, result;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0:
+                    schema = index_1.r.object({
+                        email: index_1.r.string().email()
+                    });
+                    data = { email: "invalid" };
+                    return [4 /*yield*/, index_1.Validator.validateAtPath(schema, data, ["email"])];
+                case 1:
+                    result = _a.sent();
+                    node_assert_1["default"].strictEqual(result.success, false);
+                    return [2 /*return*/];
+            }
         });
-        var data = { email: "invalid" };
-        var result = index_1.Validator.validateAtPath(schema, data, ["email"]);
-        node_assert_1["default"].strictEqual(result.success, false);
-    });
-    node_test_1.test("validates nested path", function () {
-        var schema = index_1.r.object({
-            user: index_1.r.object({
-                email: index_1.r.string().email()
-            })
+    }); });
+    node_test_1.test("validates nested path", function () { return __awaiter(void 0, void 0, void 0, function () {
+        var schema, data, result;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0:
+                    schema = index_1.r.object({
+                        user: index_1.r.object({
+                            email: index_1.r.string().email()
+                        })
+                    });
+                    data = { user: { email: "test@example.com" } };
+                    return [4 /*yield*/, index_1.Validator.validateAtPath(schema, data, [
+                            "user",
+                            "email",
+                        ])];
+                case 1:
+                    result = _a.sent();
+                    node_assert_1["default"].strictEqual(result.success, true);
+                    return [2 /*return*/];
+            }
         });
-        var data = { user: { email: "test@example.com" } };
-        var result = index_1.Validator.validateAtPath(schema, data, ["user", "email"]);
-        node_assert_1["default"].strictEqual(result.success, true);
-    });
+    }); });
 });
 node_test_1.describe("Validator Methods", function () {
-    node_test_1.test("parse() returns data on success", function () {
-        var schema = index_1.r.string();
-        var result = index_1.Validator.parse(schema, "hello");
-        node_assert_1["default"].strictEqual(result, "hello");
-    });
-    node_test_1.test("parse() throws on failure", function () {
-        var schema = index_1.r.string().email();
-        node_assert_1["default"].throws(function () {
-            index_1.Validator.parse(schema, "invalid");
+    node_test_1.test("parse() returns data on success", function () { return __awaiter(void 0, void 0, void 0, function () {
+        var schema, result;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0:
+                    schema = index_1.r.string();
+                    return [4 /*yield*/, index_1.Validator.parse(schema, "hello")];
+                case 1:
+                    result = _a.sent();
+                    node_assert_1["default"].strictEqual(result, "hello");
+                    return [2 /*return*/];
+            }
         });
-    });
-    node_test_1.test("safeParse() returns success result", function () {
-        var schema = index_1.r.string();
-        var result = index_1.Validator.safeParse(schema, "hello");
-        node_assert_1["default"].strictEqual(result.success, true);
-        if (result.success) {
-            node_assert_1["default"].strictEqual(result.data, "hello");
-        }
-    });
-    node_test_1.test("safeParse() returns error result", function () {
-        var schema = index_1.r.string().email();
-        var result = index_1.Validator.safeParse(schema, "invalid");
-        node_assert_1["default"].strictEqual(result.success, false);
-        if (!result.success) {
-            node_assert_1["default"](result.errors.length > 0);
-        }
-    });
+    }); });
+    node_test_1.test("parse() throws on failure", function () { return __awaiter(void 0, void 0, void 0, function () {
+        var schema;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0:
+                    schema = index_1.r.string().email();
+                    return [4 /*yield*/, node_assert_1["default"].rejects(function () { return __awaiter(void 0, void 0, void 0, function () {
+                            return __generator(this, function (_a) {
+                                switch (_a.label) {
+                                    case 0: return [4 /*yield*/, index_1.Validator.parse(schema, "invalid")];
+                                    case 1:
+                                        _a.sent();
+                                        return [2 /*return*/];
+                                }
+                            });
+                        }); })];
+                case 1:
+                    _a.sent();
+                    return [2 /*return*/];
+            }
+        });
+    }); });
+    node_test_1.test("safeParse() returns success result", function () { return __awaiter(void 0, void 0, void 0, function () {
+        var schema, result;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0:
+                    schema = index_1.r.string();
+                    return [4 /*yield*/, index_1.Validator.safeParse(schema, "hello")];
+                case 1:
+                    result = _a.sent();
+                    node_assert_1["default"].strictEqual(result.success, true);
+                    if (result.success) {
+                        node_assert_1["default"].strictEqual(result.data, "hello");
+                    }
+                    return [2 /*return*/];
+            }
+        });
+    }); });
+    node_test_1.test("safeParse() returns error result", function () { return __awaiter(void 0, void 0, void 0, function () {
+        var schema, result;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0:
+                    schema = index_1.r.string().email();
+                    return [4 /*yield*/, index_1.Validator.safeParse(schema, "invalid")];
+                case 1:
+                    result = _a.sent();
+                    node_assert_1["default"].strictEqual(result.success, false);
+                    if (!result.success) {
+                        node_assert_1["default"](result.errors.length > 0);
+                    }
+                    return [2 /*return*/];
+            }
+        });
+    }); });
 });
 node_test_1.describe("Type Inference", function () {
     node_test_1.test("infers string type", function () {
@@ -324,34 +606,53 @@ node_test_1.describe("Form Runtime", function () {
         form.setValue("name", "John");
         node_assert_1["default"].strictEqual(form.values.name, "John");
     });
-    node_test_1.test("validates field on blur", function () {
-        var schema = index_1.r.object({
-            email: index_1.r.string().email()
+    node_test_1.test("validates field on blur", function () { return __awaiter(void 0, void 0, void 0, function () {
+        var schema, form;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0:
+                    schema = index_1.r.object({
+                        email: index_1.r.string().email()
+                    });
+                    form = index_1.createForm({
+                        schema: schema,
+                        defaultValues: { email: "" },
+                        onSubmit: function () { },
+                        validateOnBlur: true
+                    });
+                    form.setValue("email", "invalid");
+                    form.handleBlur("email");
+                    return [4 /*yield*/, flushAsync()];
+                case 1:
+                    _a.sent();
+                    node_assert_1["default"](form.errors.email !== null);
+                    return [2 /*return*/];
+            }
         });
-        var form = index_1.createForm({
-            schema: schema,
-            defaultValues: { email: "" },
-            onSubmit: function () { },
-            validateOnBlur: true
+    }); });
+    node_test_1.test("validates entire form", function () { return __awaiter(void 0, void 0, void 0, function () {
+        var schema, form, errors;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0:
+                    schema = index_1.r.object({
+                        name: index_1.r.string().min(2),
+                        email: index_1.r.string().email()
+                    });
+                    form = index_1.createForm({
+                        schema: schema,
+                        defaultValues: { name: "J", email: "invalid" },
+                        onSubmit: function () { }
+                    });
+                    return [4 /*yield*/, form.validateForm()];
+                case 1:
+                    errors = _a.sent();
+                    node_assert_1["default"](errors.name !== null);
+                    node_assert_1["default"](errors.email !== null);
+                    return [2 /*return*/];
+            }
         });
-        form.setValue("email", "invalid");
-        form.handleBlur("email");
-        node_assert_1["default"](form.errors.email !== null);
-    });
-    node_test_1.test("validates entire form", function () {
-        var schema = index_1.r.object({
-            name: index_1.r.string().min(2),
-            email: index_1.r.string().email()
-        });
-        var form = index_1.createForm({
-            schema: schema,
-            defaultValues: { name: "J", email: "invalid" },
-            onSubmit: function () { }
-        });
-        var errors = form.validateForm();
-        node_assert_1["default"](errors.name !== null);
-        node_assert_1["default"](errors.email !== null);
-    });
+    }); });
     node_test_1.test("calls onSubmit with valid data", function () { return __awaiter(void 0, void 0, void 0, function () {
         var submitted, schema, form;
         return __generator(this, function (_a) {
@@ -392,53 +693,87 @@ node_test_1.describe("Form Runtime", function () {
     });
 });
 node_test_1.describe("Error Structure", function () {
-    node_test_1.test("error has correct structure", function () {
-        var schema = index_1.r.string().email();
-        var result = index_1.Validator.validate(schema, "invalid");
-        node_assert_1["default"].strictEqual(result.success, false);
-        if (result.errors) {
-            var error = result.errors[0];
-            node_assert_1["default"](Array.isArray(error.path));
-            node_assert_1["default"](typeof error.code === "string");
-            node_assert_1["default"](typeof error.message === "string");
-        }
-    });
-    node_test_1.test("error includes path", function () {
-        var schema = index_1.r.object({
-            user: index_1.r.object({
-                email: index_1.r.string().email()
-            })
+    node_test_1.test("error has correct structure", function () { return __awaiter(void 0, void 0, void 0, function () {
+        var schema, result, error;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0:
+                    schema = index_1.r.string().email();
+                    return [4 /*yield*/, index_1.Validator.validate(schema, "invalid")];
+                case 1:
+                    result = _a.sent();
+                    node_assert_1["default"].strictEqual(result.success, false);
+                    if (result.errors) {
+                        error = result.errors[0];
+                        node_assert_1["default"](Array.isArray(error.path));
+                        node_assert_1["default"](typeof error.code === "string");
+                        node_assert_1["default"](typeof error.message === "string");
+                    }
+                    return [2 /*return*/];
+            }
         });
-        var result = index_1.Validator.validate(schema, {
-            user: { email: "invalid" }
+    }); });
+    node_test_1.test("error includes path", function () { return __awaiter(void 0, void 0, void 0, function () {
+        var schema, result, error;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0:
+                    schema = index_1.r.object({
+                        user: index_1.r.object({
+                            email: index_1.r.string().email()
+                        })
+                    });
+                    return [4 /*yield*/, index_1.Validator.validate(schema, {
+                            user: { email: "invalid" }
+                        })];
+                case 1:
+                    result = _a.sent();
+                    node_assert_1["default"].strictEqual(result.success, false);
+                    if (result.errors) {
+                        error = result.errors[0];
+                        node_assert_1["default"](error.path.includes("email"));
+                    }
+                    return [2 /*return*/];
+            }
         });
-        node_assert_1["default"].strictEqual(result.success, false);
-        if (result.errors) {
-            var error = result.errors[0];
-            node_assert_1["default"](error.path.includes("email"));
-        }
-    });
+    }); });
 });
 node_test_1.describe("Performance", function () {
-    node_test_1.test("validates quickly", function () {
-        var schema = index_1.r.object({
-            name: index_1.r.string(),
-            email: index_1.r.string().email(),
-            age: index_1.r.number().min(0).max(120)
+    node_test_1.test("validates quickly", function () { return __awaiter(void 0, void 0, void 0, function () {
+        var schema, data, iterations, start, i, end, avgTime;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0:
+                    schema = index_1.r.object({
+                        name: index_1.r.string(),
+                        email: index_1.r.string().email(),
+                        age: index_1.r.number().min(0).max(120)
+                    });
+                    data = {
+                        name: "John Doe",
+                        email: "john@example.com",
+                        age: 30
+                    };
+                    iterations = 100;
+                    start = performance.now();
+                    i = 0;
+                    _a.label = 1;
+                case 1:
+                    if (!(i < iterations)) return [3 /*break*/, 4];
+                    return [4 /*yield*/, index_1.Validator.validate(schema, data)];
+                case 2:
+                    _a.sent();
+                    _a.label = 3;
+                case 3:
+                    i++;
+                    return [3 /*break*/, 1];
+                case 4:
+                    end = performance.now();
+                    avgTime = (end - start) / iterations;
+                    // Should validate in less than 1ms on average
+                    node_assert_1["default"](avgTime < 1, "Average validation time " + avgTime + "ms exceeds 1ms");
+                    return [2 /*return*/];
+            }
         });
-        var data = {
-            name: "John Doe",
-            email: "john@example.com",
-            age: 30
-        };
-        var iterations = 100;
-        var start = performance.now();
-        for (var i = 0; i < iterations; i++) {
-            index_1.Validator.validate(schema, data);
-        }
-        var end = performance.now();
-        var avgTime = (end - start) / iterations;
-        // Should validate in less than 1ms on average
-        node_assert_1["default"](avgTime < 1, "Average validation time " + avgTime + "ms exceeds 1ms");
-    });
+    }); });
 });

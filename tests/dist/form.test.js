@@ -52,12 +52,13 @@ node_test_1.before(function () { return __awaiter(void 0, void 0, void 0, functi
         }
     });
 }); });
+var flushAsync = function () { return new Promise(function (resolve) { return setTimeout(resolve, 0); }); };
 node_test_1.describe("Form Runtime", function () {
     node_test_1.describe("Form Creation", function () {
         node_test_1.it("should create form with default values", function () {
-            var schema = n.object({
-                name: n.string(),
-                email: n.string()
+            var schema = index_1.r.object({
+                name: index_1.r.string(),
+                email: index_1.r.string()
             });
             var form = index_1.createForm({
                 schema: schema,
@@ -68,7 +69,7 @@ node_test_1.describe("Form Runtime", function () {
             node_assert_1["default"].strictEqual(form.values.email, "");
         });
         node_test_1.it("should initialize with correct state", function () {
-            var schema = n.object({ name: n.string() });
+            var schema = index_1.r.object({ name: index_1.r.string() });
             var form = index_1.createForm({
                 schema: schema,
                 defaultValues: { name: "John" },
@@ -81,7 +82,7 @@ node_test_1.describe("Form Runtime", function () {
     });
     node_test_1.describe("Field Operations", function () {
         node_test_1.it("should set field value", function () {
-            var schema = n.object({ name: n.string() });
+            var schema = index_1.r.object({ name: index_1.r.string() });
             var form = index_1.createForm({
                 schema: schema,
                 defaultValues: { name: "" },
@@ -91,7 +92,7 @@ node_test_1.describe("Form Runtime", function () {
             node_assert_1["default"].strictEqual(form.values.name, "John");
         });
         node_test_1.it("should mark field as touched on blur", function () {
-            var schema = n.object({ email: n.string() });
+            var schema = index_1.r.object({ email: index_1.r.string() });
             var form = index_1.createForm({
                 schema: schema,
                 defaultValues: { email: "" },
@@ -101,84 +102,137 @@ node_test_1.describe("Form Runtime", function () {
             form.handleBlur("email");
             node_assert_1["default"].strictEqual(form.touched.email, true);
         });
-        node_test_1.it("should validate field on change when enabled", function () {
-            var schema = n.object({
-                email: n.string().email()
+        node_test_1.it("should validate field on change when enabled", function () { return __awaiter(void 0, void 0, void 0, function () {
+            var schema, form;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        schema = index_1.r.object({
+                            email: index_1.r.string().email()
+                        });
+                        form = index_1.createForm({
+                            schema: schema,
+                            defaultValues: { email: "" },
+                            onSubmit: function () { },
+                            validateOnChange: true
+                        });
+                        form.setValue("email", "invalid");
+                        return [4 /*yield*/, flushAsync()];
+                    case 1:
+                        _a.sent();
+                        node_assert_1["default"](form.errors.email !== null);
+                        form.setValue("email", "valid@example.com");
+                        return [4 /*yield*/, flushAsync()];
+                    case 2:
+                        _a.sent();
+                        node_assert_1["default"].strictEqual(form.errors.email, null);
+                        return [2 /*return*/];
+                }
             });
-            var form = index_1.createForm({
-                schema: schema,
-                defaultValues: { email: "" },
-                onSubmit: function () { },
-                validateOnChange: true
+        }); });
+        node_test_1.it("should validate field on blur when enabled", function () { return __awaiter(void 0, void 0, void 0, function () {
+            var schema, form;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        schema = index_1.r.object({
+                            email: index_1.r.string().email()
+                        });
+                        form = index_1.createForm({
+                            schema: schema,
+                            defaultValues: { email: "invalid" },
+                            onSubmit: function () { },
+                            validateOnBlur: true
+                        });
+                        node_assert_1["default"].strictEqual(form.errors.email, null);
+                        form.handleBlur("email");
+                        return [4 /*yield*/, flushAsync()];
+                    case 1:
+                        _a.sent();
+                        node_assert_1["default"](form.errors.email !== null);
+                        return [2 /*return*/];
+                }
             });
-            form.setValue("email", "invalid");
-            node_assert_1["default"](form.errors.email !== null);
-            form.setValue("email", "valid@example.com");
-            node_assert_1["default"].strictEqual(form.errors.email, null);
-        });
-        node_test_1.it("should validate field on blur when enabled", function () {
-            var schema = n.object({
-                email: n.string().email()
-            });
-            var form = index_1.createForm({
-                schema: schema,
-                defaultValues: { email: "invalid" },
-                onSubmit: function () { },
-                validateOnBlur: true
-            });
-            node_assert_1["default"].strictEqual(form.errors.email, null);
-            form.handleBlur("email");
-            node_assert_1["default"](form.errors.email !== null);
-        });
+        }); });
     });
     node_test_1.describe("Form Validation", function () {
-        node_test_1.it("should validate entire form", function () {
-            var schema = n.object({
-                name: n.string().min(2),
-                email: n.string().email()
+        node_test_1.it("should validate entire form", function () { return __awaiter(void 0, void 0, void 0, function () {
+            var schema, form, errors;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        schema = index_1.r.object({
+                            name: index_1.r.string().min(2),
+                            email: index_1.r.string().email()
+                        });
+                        form = index_1.createForm({
+                            schema: schema,
+                            defaultValues: { name: "J", email: "invalid" },
+                            onSubmit: function () { }
+                        });
+                        return [4 /*yield*/, form.validateForm()];
+                    case 1:
+                        errors = _a.sent();
+                        node_assert_1["default"](errors.name !== null);
+                        node_assert_1["default"](errors.email !== null);
+                        return [2 /*return*/];
+                }
             });
-            var form = index_1.createForm({
-                schema: schema,
-                defaultValues: { name: "J", email: "invalid" },
-                onSubmit: function () { }
+        }); });
+        node_test_1.it("should update isValid flag", function () { return __awaiter(void 0, void 0, void 0, function () {
+            var schema, form, errors1, errors2;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        schema = index_1.r.object({
+                            name: index_1.r.string().min(2)
+                        });
+                        form = index_1.createForm({
+                            schema: schema,
+                            defaultValues: { name: "J" },
+                            onSubmit: function () { },
+                            validateOnChange: true
+                        });
+                        return [4 /*yield*/, form.validateForm()];
+                    case 1:
+                        errors1 = _a.sent();
+                        node_assert_1["default"](Object.values(errors1).some(function (e) { return e !== null; }));
+                        // Set valid value and validate
+                        form.setValue("name", "John");
+                        return [4 /*yield*/, form.validateForm()];
+                    case 2:
+                        errors2 = _a.sent();
+                        node_assert_1["default"](Object.values(errors2).every(function (e) { return e === null; }));
+                        return [2 /*return*/];
+                }
             });
-            var errors = form.validateForm();
-            node_assert_1["default"](errors.name !== null);
-            node_assert_1["default"](errors.email !== null);
-        });
-        node_test_1.it("should update isValid flag", function () {
-            var schema = n.object({
-                name: n.string().min(2)
+        }); });
+        node_test_1.it("should validate specific field path", function () { return __awaiter(void 0, void 0, void 0, function () {
+            var schema, form, nameError, emailError;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        schema = index_1.r.object({
+                            name: index_1.r.string().min(2),
+                            email: index_1.r.string().email()
+                        });
+                        form = index_1.createForm({
+                            schema: schema,
+                            defaultValues: { name: "John", email: "invalid" },
+                            onSubmit: function () { }
+                        });
+                        return [4 /*yield*/, form.validateField("name")];
+                    case 1:
+                        nameError = _a.sent();
+                        node_assert_1["default"].strictEqual(nameError, null);
+                        return [4 /*yield*/, form.validateField("email")];
+                    case 2:
+                        emailError = _a.sent();
+                        node_assert_1["default"](emailError !== null);
+                        return [2 /*return*/];
+                }
             });
-            var form = index_1.createForm({
-                schema: schema,
-                defaultValues: { name: "J" },
-                onSubmit: function () { },
-                validateOnChange: true
-            });
-            // Validate with invalid data
-            var errors1 = form.validateForm();
-            node_assert_1["default"](Object.values(errors1).some(function (e) { return e !== null; }));
-            // Set valid value and validate
-            form.setValue("name", "John");
-            var errors2 = form.validateForm();
-            node_assert_1["default"](Object.values(errors2).every(function (e) { return e === null; }));
-        });
-        node_test_1.it("should validate specific field path", function () {
-            var schema = n.object({
-                name: n.string().min(2),
-                email: n.string().email()
-            });
-            var form = index_1.createForm({
-                schema: schema,
-                defaultValues: { name: "John", email: "invalid" },
-                onSubmit: function () { }
-            });
-            var nameError = form.validateField("name");
-            node_assert_1["default"].strictEqual(nameError, null);
-            var emailError = form.validateField("email");
-            node_assert_1["default"](emailError !== null);
-        });
+        }); });
     });
     node_test_1.describe("Form Submission", function () {
         node_test_1.it("should call onSubmit with valid data", function () { return __awaiter(void 0, void 0, void 0, function () {
@@ -188,8 +242,8 @@ node_test_1.describe("Form Runtime", function () {
                     case 0:
                         submitted = false;
                         submittedData = null;
-                        schema = n.object({
-                            name: n.string().min(2)
+                        schema = index_1.r.object({
+                            name: index_1.r.string().min(2)
                         });
                         form = index_1.createForm({
                             schema: schema,
@@ -214,8 +268,8 @@ node_test_1.describe("Form Runtime", function () {
                 switch (_a.label) {
                     case 0:
                         submitted = false;
-                        schema = n.object({
-                            email: n.string().email()
+                        schema = index_1.r.object({
+                            email: index_1.r.string().email()
                         });
                         form = index_1.createForm({
                             schema: schema,
@@ -233,18 +287,21 @@ node_test_1.describe("Form Runtime", function () {
             });
         }); });
         node_test_1.it("should set isSubmitting flag during submission", function () { return __awaiter(void 0, void 0, void 0, function () {
-            var schema, form, submitPromise;
+            var schema, wasSubmittingDuringSubmit, form, submitPromise;
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        schema = n.object({ name: n.string() });
+                        schema = index_1.r.object({ name: index_1.r.string() });
+                        wasSubmittingDuringSubmit = false;
                         form = index_1.createForm({
                             schema: schema,
                             defaultValues: { name: "John" },
                             onSubmit: function () { return __awaiter(void 0, void 0, void 0, function () {
                                 return __generator(this, function (_a) {
                                     switch (_a.label) {
-                                        case 0: return [4 /*yield*/, new Promise(function (resolve) { return setTimeout(resolve, 10); })];
+                                        case 0:
+                                            wasSubmittingDuringSubmit = form.isSubmitting;
+                                            return [4 /*yield*/, new Promise(function (resolve) { return setTimeout(resolve, 10); })];
                                         case 1:
                                             _a.sent();
                                             return [2 /*return*/];
@@ -253,11 +310,14 @@ node_test_1.describe("Form Runtime", function () {
                             }); }
                         });
                         submitPromise = form.handleSubmit();
-                        // isSubmitting should be true during submission
-                        node_assert_1["default"].strictEqual(form.isSubmitting, true);
-                        return [4 /*yield*/, submitPromise];
+                        return [4 /*yield*/, flushAsync()];
                     case 1:
                         _a.sent();
+                        node_assert_1["default"].strictEqual(form.isSubmitting, true);
+                        return [4 /*yield*/, submitPromise];
+                    case 2:
+                        _a.sent();
+                        node_assert_1["default"].strictEqual(wasSubmittingDuringSubmit, true);
                         node_assert_1["default"].strictEqual(form.isSubmitting, false);
                         return [2 /*return*/];
                 }
@@ -268,7 +328,7 @@ node_test_1.describe("Form Runtime", function () {
             return __generator(this, function (_a) {
                 switch (_a.label) {
                     case 0:
-                        schema = n.object({ name: n.string() });
+                        schema = index_1.r.object({ name: index_1.r.string() });
                         errorThrown = false;
                         form = index_1.createForm({
                             schema: schema,
@@ -300,7 +360,7 @@ node_test_1.describe("Form Runtime", function () {
     });
     node_test_1.describe("Form Reset", function () {
         node_test_1.it("should reset to default values", function () {
-            var schema = n.object({ name: n.string() });
+            var schema = index_1.r.object({ name: index_1.r.string() });
             var form = index_1.createForm({
                 schema: schema,
                 defaultValues: { name: "John" },
@@ -312,8 +372,8 @@ node_test_1.describe("Form Runtime", function () {
             node_assert_1["default"].strictEqual(form.values.name, "John");
         });
         node_test_1.it("should clear errors on reset", function () {
-            var schema = n.object({
-                email: n.string().email()
+            var schema = index_1.r.object({
+                email: index_1.r.string().email()
             });
             var form = index_1.createForm({
                 schema: schema,
@@ -329,7 +389,7 @@ node_test_1.describe("Form Runtime", function () {
             node_assert_1["default"].strictEqual(form.values.email, "valid@example.com");
         });
         node_test_1.it("should clear touched state on reset", function () {
-            var schema = n.object({ name: n.string() });
+            var schema = index_1.r.object({ name: index_1.r.string() });
             var form = index_1.createForm({
                 schema: schema,
                 defaultValues: { name: "" },
@@ -344,7 +404,7 @@ node_test_1.describe("Form Runtime", function () {
     node_test_1.describe("Form Subscriptions", function () {
         node_test_1.it("should notify subscribers on changes", function () {
             var notified = false;
-            var schema = n.object({ name: n.string() });
+            var schema = index_1.r.object({ name: index_1.r.string() });
             var form = index_1.createForm({
                 schema: schema,
                 defaultValues: { name: "" },
@@ -359,7 +419,7 @@ node_test_1.describe("Form Runtime", function () {
         });
         node_test_1.it("should not notify after unsubscribe", function () {
             var callCount = 0;
-            var schema = n.object({ name: n.string() });
+            var schema = index_1.r.object({ name: index_1.r.string() });
             var form = index_1.createForm({
                 schema: schema,
                 defaultValues: { name: "" },
@@ -377,7 +437,7 @@ node_test_1.describe("Form Runtime", function () {
         node_test_1.it("should support multiple subscribers", function () {
             var count1 = 0;
             var count2 = 0;
-            var schema = n.object({ name: n.string() });
+            var schema = index_1.r.object({ name: index_1.r.string() });
             var form = index_1.createForm({
                 schema: schema,
                 defaultValues: { name: "" },
@@ -397,49 +457,67 @@ node_test_1.describe("Form Runtime", function () {
         });
     });
     node_test_1.describe("Complex Forms", function () {
-        node_test_1.it("should handle multi-field forms", function () {
-            var schema = n.object({
-                username: n.string().min(3),
-                email: n.string().email(),
-                age: n.number().min(18).integer(),
-                agreed: n.boolean()
+        node_test_1.it("should handle multi-field forms", function () { return __awaiter(void 0, void 0, void 0, function () {
+            var schema, form, errors;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        schema = index_1.r.object({
+                            username: index_1.r.string().min(3),
+                            email: index_1.r.string().email(),
+                            age: index_1.r.number().min(18).integer(),
+                            agreed: index_1.r.boolean()
+                        });
+                        form = index_1.createForm({
+                            schema: schema,
+                            defaultValues: {
+                                username: "",
+                                email: "",
+                                age: 18,
+                                agreed: false
+                            },
+                            onSubmit: function () { }
+                        });
+                        form.setValue("username", "john");
+                        form.setValue("email", "john@example.com");
+                        form.setValue("age", 25);
+                        form.setValue("agreed", true);
+                        return [4 /*yield*/, form.validateForm()];
+                    case 1:
+                        errors = _a.sent();
+                        node_assert_1["default"].strictEqual(errors.username, null);
+                        node_assert_1["default"].strictEqual(errors.email, null);
+                        node_assert_1["default"].strictEqual(errors.age, null);
+                        node_assert_1["default"].strictEqual(errors.agreed, null);
+                        return [2 /*return*/];
+                }
             });
-            var form = index_1.createForm({
-                schema: schema,
-                defaultValues: {
-                    username: "",
-                    email: "",
-                    age: 18,
-                    agreed: false
-                },
-                onSubmit: function () { }
+        }); });
+        node_test_1.it("should handle nested validation errors", function () { return __awaiter(void 0, void 0, void 0, function () {
+            var schema, form, errors;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0:
+                        schema = index_1.r.object({
+                            user: index_1.r.object({
+                                name: index_1.r.string().min(2),
+                                email: index_1.r.string().email()
+                            })
+                        });
+                        form = index_1.createForm({
+                            schema: schema,
+                            defaultValues: {
+                                user: { name: "", email: "" }
+                            },
+                            onSubmit: function () { }
+                        });
+                        return [4 /*yield*/, form.validateForm()];
+                    case 1:
+                        errors = _a.sent();
+                        node_assert_1["default"](Object.values(errors).some(function (e) { return e !== null; }));
+                        return [2 /*return*/];
+                }
             });
-            form.setValue("username", "john");
-            form.setValue("email", "john@example.com");
-            form.setValue("age", 25);
-            form.setValue("agreed", true);
-            var errors = form.validateForm();
-            node_assert_1["default"].strictEqual(errors.username, null);
-            node_assert_1["default"].strictEqual(errors.email, null);
-            node_assert_1["default"].strictEqual(errors.age, null);
-            node_assert_1["default"].strictEqual(errors.agreed, null);
-        });
-        node_test_1.it("should handle nested validation errors", function () {
-            var schema = n.object({
-                user: n.object({
-                    name: n.string().min(2),
-                    email: n.string().email()
-                })
-            });
-            var form = index_1.createForm({
-                schema: schema,
-                defaultValues: {
-                    user: { name: "", email: "" }
-                },
-                onSubmit: function () { }
-            });
-            var errors = form.validateForm();
-            node_assert_1["default"](Object.values(errors).some(function (e) { return e !== null; }));
-        });
+        }); });
     });
 });

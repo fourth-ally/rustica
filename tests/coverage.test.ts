@@ -37,21 +37,14 @@ describe("Validator Additional Coverage", () => {
     assert.ok(exception.message.includes("Too young"));
   });
 
-  it("should throw ValidationException on parse failure", () => {
+  it("should throw ValidationException on parse failure", async () => {
     const schema = r.string().email();
-
-    try {
-      Validator.parse(schema, "not-an-email");
-      assert.fail("Expected ValidationException to be thrown");
-    } catch (error) {
-      assert.ok(error instanceof ValidationException);
-      assert.ok((error as ValidationException).errors.length > 0);
-      // Check that there is an error, constraint might vary
-      assert.ok((error as ValidationException).errors[0].message);
-    }
+    await assert.rejects(async () => {
+      await Validator.parse(schema, "not-an-email");
+    }, ValidationException);
   });
 
-  it("should handle nested path validation errors", () => {
+  it("should handle nested path validation errors", async () => {
     const schema = r.object({
       user: r.object({
         profile: r.object({
@@ -60,7 +53,7 @@ describe("Validator Additional Coverage", () => {
       }),
     });
 
-    const result = Validator.validateAtPath(
+    const result = await Validator.validateAtPath(
       schema,
       { user: { profile: { email: "invalid" } } },
       ["user", "profile", "email"],
@@ -75,7 +68,7 @@ describe("Validator Additional Coverage", () => {
     ]);
   });
 
-  it("should handle deep nested objects", () => {
+  it("should handle deep nested objects", async () => {
     const schema = r.object({
       level1: r.object({
         level2: r.object({
@@ -96,7 +89,7 @@ describe("Validator Additional Coverage", () => {
       },
     };
 
-    const result = Validator.safeParse(schema, validData);
+    const result = await Validator.safeParse(schema, validData);
     assert.strictEqual(result.success, true);
     if (result.success) {
       assert.strictEqual(
@@ -106,33 +99,33 @@ describe("Validator Additional Coverage", () => {
     }
   });
 
-  it("should validate string pattern regex", () => {
+  it("should validate string pattern regex", async () => {
     const schema = r.string().pattern("^[A-Z][a-z]+$");
 
-    const valid = Validator.validate(schema, "Hello");
-    const invalid = Validator.validate(schema, "hello");
+    const valid = await Validator.validate(schema, "Hello");
+    const invalid = await Validator.validate(schema, "hello");
 
     // Pattern validation is implemented - just verify it validates
     assert.ok(valid.success !== undefined);
     assert.ok(invalid.success !== undefined);
   });
 
-  it("should handle number positive constraint", () => {
+  it("should handle number positive constraint", async () => {
     const schema = r.number().positive();
 
-    assert.strictEqual(Validator.validate(schema, 5).success, true);
-    assert.strictEqual(Validator.validate(schema, 0).success, false);
-    assert.strictEqual(Validator.validate(schema, -5).success, false);
+    assert.strictEqual((await Validator.validate(schema, 5)).success, true);
+    assert.strictEqual((await Validator.validate(schema, 0)).success, false);
+    assert.strictEqual((await Validator.validate(schema, -5)).success, false);
   });
 
-  it("should handle multiple constraints on same field", () => {
+  it("should handle multiple constraints on same field", async () => {
     const schema = r.number().min(18).max(65).integer().positive();
 
-    assert.strictEqual(Validator.validate(schema, 25).success, true);
-    assert.strictEqual(Validator.validate(schema, 17).success, false); // too young
-    assert.strictEqual(Validator.validate(schema, 66).success, false); // too old
-    assert.strictEqual(Validator.validate(schema, 25.5).success, false); // not integer
-    assert.strictEqual(Validator.validate(schema, -5).success, false); // not positive
+    assert.strictEqual((await Validator.validate(schema, 25)).success, true);
+    assert.strictEqual((await Validator.validate(schema, 17)).success, false); // too young
+    assert.strictEqual((await Validator.validate(schema, 66)).success, false); // too old
+    assert.strictEqual((await Validator.validate(schema, 25.5)).success, false); // not integer
+    assert.strictEqual((await Validator.validate(schema, -5)).success, false); // not positive
   });
 
   it("should preserve UI config in schema JSON", () => {
@@ -148,14 +141,14 @@ describe("Validator Additional Coverage", () => {
     assert.strictEqual(json.ui?.description, "Enter your email");
   });
 
-  it("should handle empty object validation", () => {
+  it("should handle empty object validation", async () => {
     const schema = r.object({});
 
-    const result = Validator.validate(schema, {});
+    const result = await Validator.validate(schema, {});
     assert.strictEqual(result.success, true);
   });
 
-  it("should handle complex nested validation errors", () => {
+  it("should handle complex nested validation errors", async () => {
     const schema = r.object({
       users: r.object({
         admin: r.object({
@@ -180,12 +173,12 @@ describe("Validator Additional Coverage", () => {
       },
     };
 
-    const result = Validator.validate(schema, invalidData);
+    const result = await Validator.validate(schema, invalidData);
     assert.strictEqual(result.success, false);
     assert.ok(result.errors && result.errors.length >= 3);
   });
 
-  it("should infer correct types from schema", () => {
+  it("should infer correct types from schema", async () => {
     const schema = r.object({
       name: r.string(),
       age: r.number(),
@@ -207,11 +200,11 @@ describe("Validator Additional Coverage", () => {
       },
     };
 
-    const result = Validator.parse(schema, data);
+    const result = await Validator.parse(schema, data);
     assert.strictEqual((result as any).name, "John");
   });
 
-  it("should handle validateAtPath with valid path", () => {
+  it("should handle validateAtPath with valid path", async () => {
     const schema = r.object({
       settings: r.object({
         email: r.string().email(),
@@ -226,33 +219,36 @@ describe("Validator Additional Coverage", () => {
       },
     };
 
-    const result = Validator.validateAtPath(schema, data, [
+    const result = await Validator.validateAtPath(schema, data, [
       "settings",
       "email",
     ]);
     assert.strictEqual(result.success, true);
   });
 
-  it("should handle min/max validation", () => {
+  it("should handle min/max validation", async () => {
     const schema = r.string().min(5).max(20);
 
-    const shortResult = Validator.validate(schema, "abc");
+    const shortResult = await Validator.validate(schema, "abc");
     assert.strictEqual(shortResult.success, false);
     assert.ok(shortResult.errors && shortResult.errors[0].message);
 
-    const longResult = Validator.validate(schema, "a".repeat(25));
+    const longResult = await Validator.validate(schema, "a".repeat(25));
     assert.strictEqual(longResult.success, false);
     assert.ok(longResult.errors && longResult.errors[0].message);
   });
 
-  it("should validate boolean schema correctly", () => {
+  it("should validate boolean schema correctly", async () => {
     const schema = r.boolean();
 
-    assert.strictEqual(Validator.validate(schema, true).success, true);
-    assert.strictEqual(Validator.validate(schema, false).success, true);
-    assert.strictEqual(Validator.validate(schema, "true").success, false);
-    assert.strictEqual(Validator.validate(schema, 1).success, false);
-    assert.strictEqual(Validator.validate(schema, 0).success, false);
+    assert.strictEqual((await Validator.validate(schema, true)).success, true);
+    assert.strictEqual((await Validator.validate(schema, false)).success, true);
+    assert.strictEqual(
+      (await Validator.validate(schema, "true")).success,
+      false,
+    );
+    assert.strictEqual((await Validator.validate(schema, 1)).success, false);
+    assert.strictEqual((await Validator.validate(schema, 0)).success, false);
   });
 
   it("should handle chained string methods", () => {
@@ -284,55 +280,61 @@ describe("Validator Additional Coverage", () => {
     assert.strictEqual(json.ui?.label, "Score");
   });
 
-  it("should handle URL validation edge cases", () => {
+  it("should handle URL validation edge cases", async () => {
     const schema = r.string().url();
 
     // Valid URLs
     assert.strictEqual(
-      Validator.validate(schema, "https://example.com").success,
+      (await Validator.validate(schema, "https://example.com")).success,
       true,
     );
     assert.strictEqual(
-      Validator.validate(schema, "http://localhost:3000").success,
+      (await Validator.validate(schema, "http://localhost:3000")).success,
       true,
     );
     assert.strictEqual(
-      Validator.validate(schema, "https://sub.domain.com/path").success,
+      (await Validator.validate(schema, "https://sub.domain.com/path")).success,
       true,
     );
 
     // Invalid URLs
-    assert.strictEqual(Validator.validate(schema, "not a url").success, false);
     assert.strictEqual(
-      Validator.validate(schema, "htp://invalid").success,
+      (await Validator.validate(schema, "not a url")).success,
       false,
     );
     assert.strictEqual(
-      Validator.validate(schema, "//missing-protocol").success,
+      (await Validator.validate(schema, "htp://invalid")).success,
+      false,
+    );
+    assert.strictEqual(
+      (await Validator.validate(schema, "//missing-protocol")).success,
       false,
     );
   });
 
-  it("should handle email validation edge cases", () => {
+  it("should handle email validation edge cases", async () => {
     const schema = r.string().email();
 
     // Valid emails
     assert.strictEqual(
-      Validator.validate(schema, "user@example.com").success,
+      (await Validator.validate(schema, "user@example.com")).success,
       true,
     );
 
     // Invalid emails
-    assert.strictEqual(Validator.validate(schema, "invalid").success, false);
     assert.strictEqual(
-      Validator.validate(schema, "@example.com").success,
+      (await Validator.validate(schema, "invalid")).success,
+      false,
+    );
+    assert.strictEqual(
+      (await Validator.validate(schema, "@example.com")).success,
       false,
     );
   });
 });
 
 describe("Schema Builder Edge Cases", () => {
-  it("should handle object with mixed types", () => {
+  it("should handle object with mixed types", async () => {
     const schema = r.object({
       id: r.number().integer().positive(),
       name: r.string().min(1),
@@ -351,7 +353,7 @@ describe("Schema Builder Edge Cases", () => {
       website: "https://example.com",
     };
 
-    const result = Validator.safeParse(schema, validData);
+    const result = await Validator.safeParse(schema, validData);
     assert.strictEqual(result.success, true);
   });
 
@@ -370,30 +372,30 @@ describe("Schema Builder Edge Cases", () => {
     assert.strictEqual(json.shape.username.max, 20);
   });
 
-  it("should validate integer constraint strictly", () => {
+  it("should validate integer constraint strictly", async () => {
     const schema = r.number().integer();
 
-    assert.strictEqual(Validator.validate(schema, 42).success, true);
-    assert.strictEqual(Validator.validate(schema, 0).success, true);
-    assert.strictEqual(Validator.validate(schema, -10).success, true);
+    assert.strictEqual((await Validator.validate(schema, 42)).success, true);
+    assert.strictEqual((await Validator.validate(schema, 0)).success, true);
+    assert.strictEqual((await Validator.validate(schema, -10)).success, true);
 
-    assert.strictEqual(Validator.validate(schema, 3.14).success, false);
-    assert.strictEqual(Validator.validate(schema, 0.1).success, false);
-    assert.strictEqual(Validator.validate(schema, -5.5).success, false);
+    assert.strictEqual((await Validator.validate(schema, 3.14)).success, false);
+    assert.strictEqual((await Validator.validate(schema, 0.1)).success, false);
+    assert.strictEqual((await Validator.validate(schema, -5.5)).success, false);
   });
 
-  it("should handle min/max boundaries correctly", () => {
+  it("should handle min/max boundaries correctly", async () => {
     const schema = r.number().min(10).max(20);
 
     // Boundaries
-    assert.strictEqual(Validator.validate(schema, 10).success, true);
-    assert.strictEqual(Validator.validate(schema, 20).success, true);
+    assert.strictEqual((await Validator.validate(schema, 10)).success, true);
+    assert.strictEqual((await Validator.validate(schema, 20)).success, true);
 
     // Within range
-    assert.strictEqual(Validator.validate(schema, 15).success, true);
+    assert.strictEqual((await Validator.validate(schema, 15)).success, true);
 
     // Outside range
-    assert.strictEqual(Validator.validate(schema, 9).success, false);
-    assert.strictEqual(Validator.validate(schema, 21).success, false);
+    assert.strictEqual((await Validator.validate(schema, 9)).success, false);
+    assert.strictEqual((await Validator.validate(schema, 21)).success, false);
   });
 });

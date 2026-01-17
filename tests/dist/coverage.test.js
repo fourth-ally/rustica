@@ -77,83 +77,159 @@ node_test_1.describe("Validator Additional Coverage", function () {
         node_assert_1["default"].ok(exception.message.includes("Invalid email"));
         node_assert_1["default"].ok(exception.message.includes("Too young"));
     });
-    node_test_1.it("should throw ValidationException on parse failure", function () {
-        var schema = index_1.r.string().email();
-        try {
-            index_1.Validator.parse(schema, "not-an-email");
-            node_assert_1["default"].fail("Expected ValidationException to be thrown");
-        }
-        catch (error) {
-            node_assert_1["default"].ok(error instanceof index_1.ValidationException);
-            node_assert_1["default"].ok(error.errors.length > 0);
-            // Check that there is an error, constraint might vary
-            node_assert_1["default"].ok(error.errors[0].message);
-        }
-    });
-    node_test_1.it("should handle nested path validation errors", function () {
-        var schema = index_1.r.object({
-            user: index_1.r.object({
-                profile: index_1.r.object({
-                    email: index_1.r.string().email()
-                })
-            })
-        });
-        var result = index_1.Validator.validateAtPath(schema, { user: { profile: { email: "invalid" } } }, ["user", "profile", "email"]);
-        node_assert_1["default"].strictEqual(result.success, false);
-        node_assert_1["default"].ok(result.errors && result.errors.length > 0);
-        node_assert_1["default"].deepStrictEqual(result.errors[0].path, [
-            "user",
-            "profile",
-            "email",
-        ]);
-    });
-    node_test_1.it("should handle deep nested objects", function () {
-        var schema = index_1.r.object({
-            level1: index_1.r.object({
-                level2: index_1.r.object({
-                    level3: index_1.r.object({
-                        value: index_1.r.string().min(5)
-                    })
-                })
-            })
-        });
-        var validData = {
-            level1: {
-                level2: {
-                    level3: {
-                        value: "hello world"
-                    }
-                }
+    node_test_1.it("should throw ValidationException on parse failure", function () { return __awaiter(void 0, void 0, void 0, function () {
+        var schema;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0:
+                    schema = index_1.r.string().email();
+                    return [4 /*yield*/, node_assert_1["default"].rejects(function () { return __awaiter(void 0, void 0, void 0, function () {
+                            return __generator(this, function (_a) {
+                                switch (_a.label) {
+                                    case 0: return [4 /*yield*/, index_1.Validator.parse(schema, "not-an-email")];
+                                    case 1:
+                                        _a.sent();
+                                        return [2 /*return*/];
+                                }
+                            });
+                        }); }, index_1.ValidationException)];
+                case 1:
+                    _a.sent();
+                    return [2 /*return*/];
             }
-        };
-        var result = index_1.Validator.safeParse(schema, validData);
-        node_assert_1["default"].strictEqual(result.success, true);
-        if (result.success) {
-            node_assert_1["default"].strictEqual(result.data.level1.level2.level3.value, "hello world");
-        }
-    });
-    node_test_1.it("should validate string pattern regex", function () {
-        var schema = index_1.r.string().pattern("^[A-Z][a-z]+$");
-        var valid = index_1.Validator.validate(schema, "Hello");
-        var invalid = index_1.Validator.validate(schema, "hello");
-        // Pattern validation is implemented - just verify it validates
-        node_assert_1["default"].ok(valid.success !== undefined);
-        node_assert_1["default"].ok(invalid.success !== undefined);
-    });
-    node_test_1.it("should handle number positive constraint", function () {
-        var schema = index_1.r.number().positive();
-        node_assert_1["default"].strictEqual(index_1.Validator.validate(schema, 5).success, true);
-        node_assert_1["default"].strictEqual(index_1.Validator.validate(schema, 0).success, false);
-        node_assert_1["default"].strictEqual(index_1.Validator.validate(schema, -5).success, false);
-    });
-    node_test_1.it("should handle multiple constraints on same field", function () {
-        var schema = index_1.r.number().min(18).max(65).integer().positive();
-        node_assert_1["default"].strictEqual(index_1.Validator.validate(schema, 25).success, true);
-        node_assert_1["default"].strictEqual(index_1.Validator.validate(schema, 17).success, false); // too young
-        node_assert_1["default"].strictEqual(index_1.Validator.validate(schema, 66).success, false); // too old
-        node_assert_1["default"].strictEqual(index_1.Validator.validate(schema, 25.5).success, false); // not integer
-        node_assert_1["default"].strictEqual(index_1.Validator.validate(schema, -5).success, false); // not positive
-    });
+        });
+    }); });
+    node_test_1.it("should handle nested path validation errors", function () { return __awaiter(void 0, void 0, void 0, function () {
+        var schema, result;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0:
+                    schema = index_1.r.object({
+                        user: index_1.r.object({
+                            profile: index_1.r.object({
+                                email: index_1.r.string().email()
+                            })
+                        })
+                    });
+                    return [4 /*yield*/, index_1.Validator.validateAtPath(schema, { user: { profile: { email: "invalid" } } }, ["user", "profile", "email"])];
+                case 1:
+                    result = _a.sent();
+                    node_assert_1["default"].strictEqual(result.success, false);
+                    node_assert_1["default"].ok(result.errors && result.errors.length > 0);
+                    node_assert_1["default"].deepStrictEqual(result.errors[0].path, [
+                        "user",
+                        "profile",
+                        "email",
+                    ]);
+                    return [2 /*return*/];
+            }
+        });
+    }); });
+    node_test_1.it("should handle deep nested objects", function () { return __awaiter(void 0, void 0, void 0, function () {
+        var schema, validData, result;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0:
+                    schema = index_1.r.object({
+                        level1: index_1.r.object({
+                            level2: index_1.r.object({
+                                level3: index_1.r.object({
+                                    value: index_1.r.string().min(5)
+                                })
+                            })
+                        })
+                    });
+                    validData = {
+                        level1: {
+                            level2: {
+                                level3: {
+                                    value: "hello world"
+                                }
+                            }
+                        }
+                    };
+                    return [4 /*yield*/, index_1.Validator.safeParse(schema, validData)];
+                case 1:
+                    result = _a.sent();
+                    node_assert_1["default"].strictEqual(result.success, true);
+                    if (result.success) {
+                        node_assert_1["default"].strictEqual(result.data.level1.level2.level3.value, "hello world");
+                    }
+                    return [2 /*return*/];
+            }
+        });
+    }); });
+    node_test_1.it("should validate string pattern regex", function () { return __awaiter(void 0, void 0, void 0, function () {
+        var schema, valid, invalid;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0:
+                    schema = index_1.r.string().pattern("^[A-Z][a-z]+$");
+                    return [4 /*yield*/, index_1.Validator.validate(schema, "Hello")];
+                case 1:
+                    valid = _a.sent();
+                    return [4 /*yield*/, index_1.Validator.validate(schema, "hello")];
+                case 2:
+                    invalid = _a.sent();
+                    // Pattern validation is implemented - just verify it validates
+                    node_assert_1["default"].ok(valid.success !== undefined);
+                    node_assert_1["default"].ok(invalid.success !== undefined);
+                    return [2 /*return*/];
+            }
+        });
+    }); });
+    node_test_1.it("should handle number positive constraint", function () { return __awaiter(void 0, void 0, void 0, function () {
+        var schema, _a, _b, _c, _d, _e, _f;
+        return __generator(this, function (_g) {
+            switch (_g.label) {
+                case 0:
+                    schema = index_1.r.number().positive();
+                    _b = (_a = node_assert_1["default"]).strictEqual;
+                    return [4 /*yield*/, index_1.Validator.validate(schema, 5)];
+                case 1:
+                    _b.apply(_a, [(_g.sent()).success, true]);
+                    _d = (_c = node_assert_1["default"]).strictEqual;
+                    return [4 /*yield*/, index_1.Validator.validate(schema, 0)];
+                case 2:
+                    _d.apply(_c, [(_g.sent()).success, false]);
+                    _f = (_e = node_assert_1["default"]).strictEqual;
+                    return [4 /*yield*/, index_1.Validator.validate(schema, -5)];
+                case 3:
+                    _f.apply(_e, [(_g.sent()).success, false]);
+                    return [2 /*return*/];
+            }
+        });
+    }); });
+    node_test_1.it("should handle multiple constraints on same field", function () { return __awaiter(void 0, void 0, void 0, function () {
+        var schema, _a, _b, _c, _d, _e, _f, _g, _h, _j, _k;
+        return __generator(this, function (_l) {
+            switch (_l.label) {
+                case 0:
+                    schema = index_1.r.number().min(18).max(65).integer().positive();
+                    _b = (_a = node_assert_1["default"]).strictEqual;
+                    return [4 /*yield*/, index_1.Validator.validate(schema, 25)];
+                case 1:
+                    _b.apply(_a, [(_l.sent()).success, true]);
+                    _d = (_c = node_assert_1["default"]).strictEqual;
+                    return [4 /*yield*/, index_1.Validator.validate(schema, 17)];
+                case 2:
+                    _d.apply(_c, [(_l.sent()).success, false]); // too young
+                    _f = (_e = node_assert_1["default"]).strictEqual;
+                    return [4 /*yield*/, index_1.Validator.validate(schema, 66)];
+                case 3:
+                    _f.apply(_e, [(_l.sent()).success, false]); // too old
+                    _h = (_g = node_assert_1["default"]).strictEqual;
+                    return [4 /*yield*/, index_1.Validator.validate(schema, 25.5)];
+                case 4:
+                    _h.apply(_g, [(_l.sent()).success, false]); // not integer
+                    _k = (_j = node_assert_1["default"]).strictEqual;
+                    return [4 /*yield*/, index_1.Validator.validate(schema, -5)];
+                case 5:
+                    _k.apply(_j, [(_l.sent()).success, false]); // not positive
+                    return [2 /*return*/];
+            }
+        });
+    }); });
     node_test_1.it("should preserve UI config in schema JSON", function () {
         var _a, _b, _c;
         var schema = index_1.r.string().ui({
@@ -166,95 +242,163 @@ node_test_1.describe("Validator Additional Coverage", function () {
         node_assert_1["default"].strictEqual((_b = json.ui) === null || _b === void 0 ? void 0 : _b.placeholder, "user@example.com");
         node_assert_1["default"].strictEqual((_c = json.ui) === null || _c === void 0 ? void 0 : _c.description, "Enter your email");
     });
-    node_test_1.it("should handle empty object validation", function () {
-        var schema = index_1.r.object({});
-        var result = index_1.Validator.validate(schema, {});
-        node_assert_1["default"].strictEqual(result.success, true);
-    });
-    node_test_1.it("should handle complex nested validation errors", function () {
-        var schema = index_1.r.object({
-            users: index_1.r.object({
-                admin: index_1.r.object({
-                    email: index_1.r.string().email(),
-                    age: index_1.r.number().min(18).integer()
-                }),
-                moderator: index_1.r.object({
-                    username: index_1.r.string().min(3)
-                })
-            })
-        });
-        var invalidData = {
-            users: {
-                admin: {
-                    email: "not-email",
-                    age: 15.5
-                },
-                moderator: {
-                    username: "ab"
-                }
+    node_test_1.it("should handle empty object validation", function () { return __awaiter(void 0, void 0, void 0, function () {
+        var schema, result;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0:
+                    schema = index_1.r.object({});
+                    return [4 /*yield*/, index_1.Validator.validate(schema, {})];
+                case 1:
+                    result = _a.sent();
+                    node_assert_1["default"].strictEqual(result.success, true);
+                    return [2 /*return*/];
             }
-        };
-        var result = index_1.Validator.validate(schema, invalidData);
-        node_assert_1["default"].strictEqual(result.success, false);
-        node_assert_1["default"].ok(result.errors && result.errors.length >= 3);
-    });
-    node_test_1.it("should infer correct types from schema", function () {
-        var schema = index_1.r.object({
-            name: index_1.r.string(),
-            age: index_1.r.number(),
-            active: index_1.r.boolean(),
-            metadata: index_1.r.object({
-                tags: index_1.r.string()
-            })
         });
-        // Type test - this should compile without errors
-        var data = {
-            name: "John",
-            age: 30,
-            active: true,
-            metadata: {
-                tags: "test"
+    }); });
+    node_test_1.it("should handle complex nested validation errors", function () { return __awaiter(void 0, void 0, void 0, function () {
+        var schema, invalidData, result;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0:
+                    schema = index_1.r.object({
+                        users: index_1.r.object({
+                            admin: index_1.r.object({
+                                email: index_1.r.string().email(),
+                                age: index_1.r.number().min(18).integer()
+                            }),
+                            moderator: index_1.r.object({
+                                username: index_1.r.string().min(3)
+                            })
+                        })
+                    });
+                    invalidData = {
+                        users: {
+                            admin: {
+                                email: "not-email",
+                                age: 15.5
+                            },
+                            moderator: {
+                                username: "ab"
+                            }
+                        }
+                    };
+                    return [4 /*yield*/, index_1.Validator.validate(schema, invalidData)];
+                case 1:
+                    result = _a.sent();
+                    node_assert_1["default"].strictEqual(result.success, false);
+                    node_assert_1["default"].ok(result.errors && result.errors.length >= 3);
+                    return [2 /*return*/];
             }
-        };
-        var result = index_1.Validator.parse(schema, data);
-        node_assert_1["default"].strictEqual(result.name, "John");
-    });
-    node_test_1.it("should handle validateAtPath with valid path", function () {
-        var schema = index_1.r.object({
-            settings: index_1.r.object({
-                email: index_1.r.string().email(),
-                notifications: index_1.r.boolean()
-            })
         });
-        var data = {
-            settings: {
-                email: "valid@example.com",
-                notifications: true
+    }); });
+    node_test_1.it("should infer correct types from schema", function () { return __awaiter(void 0, void 0, void 0, function () {
+        var schema, data, result;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0:
+                    schema = index_1.r.object({
+                        name: index_1.r.string(),
+                        age: index_1.r.number(),
+                        active: index_1.r.boolean(),
+                        metadata: index_1.r.object({
+                            tags: index_1.r.string()
+                        })
+                    });
+                    data = {
+                        name: "John",
+                        age: 30,
+                        active: true,
+                        metadata: {
+                            tags: "test"
+                        }
+                    };
+                    return [4 /*yield*/, index_1.Validator.parse(schema, data)];
+                case 1:
+                    result = _a.sent();
+                    node_assert_1["default"].strictEqual(result.name, "John");
+                    return [2 /*return*/];
             }
-        };
-        var result = index_1.Validator.validateAtPath(schema, data, [
-            "settings",
-            "email",
-        ]);
-        node_assert_1["default"].strictEqual(result.success, true);
-    });
-    node_test_1.it("should handle min/max validation", function () {
-        var schema = index_1.r.string().min(5).max(20);
-        var shortResult = index_1.Validator.validate(schema, "abc");
-        node_assert_1["default"].strictEqual(shortResult.success, false);
-        node_assert_1["default"].ok(shortResult.errors && shortResult.errors[0].message);
-        var longResult = index_1.Validator.validate(schema, "a".repeat(25));
-        node_assert_1["default"].strictEqual(longResult.success, false);
-        node_assert_1["default"].ok(longResult.errors && longResult.errors[0].message);
-    });
-    node_test_1.it("should validate boolean schema correctly", function () {
-        var schema = index_1.r.boolean();
-        node_assert_1["default"].strictEqual(index_1.Validator.validate(schema, true).success, true);
-        node_assert_1["default"].strictEqual(index_1.Validator.validate(schema, false).success, true);
-        node_assert_1["default"].strictEqual(index_1.Validator.validate(schema, "true").success, false);
-        node_assert_1["default"].strictEqual(index_1.Validator.validate(schema, 1).success, false);
-        node_assert_1["default"].strictEqual(index_1.Validator.validate(schema, 0).success, false);
-    });
+        });
+    }); });
+    node_test_1.it("should handle validateAtPath with valid path", function () { return __awaiter(void 0, void 0, void 0, function () {
+        var schema, data, result;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0:
+                    schema = index_1.r.object({
+                        settings: index_1.r.object({
+                            email: index_1.r.string().email(),
+                            notifications: index_1.r.boolean()
+                        })
+                    });
+                    data = {
+                        settings: {
+                            email: "valid@example.com",
+                            notifications: true
+                        }
+                    };
+                    return [4 /*yield*/, index_1.Validator.validateAtPath(schema, data, [
+                            "settings",
+                            "email",
+                        ])];
+                case 1:
+                    result = _a.sent();
+                    node_assert_1["default"].strictEqual(result.success, true);
+                    return [2 /*return*/];
+            }
+        });
+    }); });
+    node_test_1.it("should handle min/max validation", function () { return __awaiter(void 0, void 0, void 0, function () {
+        var schema, shortResult, longResult;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0:
+                    schema = index_1.r.string().min(5).max(20);
+                    return [4 /*yield*/, index_1.Validator.validate(schema, "abc")];
+                case 1:
+                    shortResult = _a.sent();
+                    node_assert_1["default"].strictEqual(shortResult.success, false);
+                    node_assert_1["default"].ok(shortResult.errors && shortResult.errors[0].message);
+                    return [4 /*yield*/, index_1.Validator.validate(schema, "a".repeat(25))];
+                case 2:
+                    longResult = _a.sent();
+                    node_assert_1["default"].strictEqual(longResult.success, false);
+                    node_assert_1["default"].ok(longResult.errors && longResult.errors[0].message);
+                    return [2 /*return*/];
+            }
+        });
+    }); });
+    node_test_1.it("should validate boolean schema correctly", function () { return __awaiter(void 0, void 0, void 0, function () {
+        var schema, _a, _b, _c, _d, _e, _f, _g, _h, _j, _k;
+        return __generator(this, function (_l) {
+            switch (_l.label) {
+                case 0:
+                    schema = index_1.r.boolean();
+                    _b = (_a = node_assert_1["default"]).strictEqual;
+                    return [4 /*yield*/, index_1.Validator.validate(schema, true)];
+                case 1:
+                    _b.apply(_a, [(_l.sent()).success, true]);
+                    _d = (_c = node_assert_1["default"]).strictEqual;
+                    return [4 /*yield*/, index_1.Validator.validate(schema, false)];
+                case 2:
+                    _d.apply(_c, [(_l.sent()).success, true]);
+                    _f = (_e = node_assert_1["default"]).strictEqual;
+                    return [4 /*yield*/, index_1.Validator.validate(schema, "true")];
+                case 3:
+                    _f.apply(_e, [(_l.sent()).success, false]);
+                    _h = (_g = node_assert_1["default"]).strictEqual;
+                    return [4 /*yield*/, index_1.Validator.validate(schema, 1)];
+                case 4:
+                    _h.apply(_g, [(_l.sent()).success, false]);
+                    _k = (_j = node_assert_1["default"]).strictEqual;
+                    return [4 /*yield*/, index_1.Validator.validate(schema, 0)];
+                case 5:
+                    _k.apply(_j, [(_l.sent()).success, false]);
+                    return [2 /*return*/];
+            }
+        });
+    }); });
     node_test_1.it("should handle chained string methods", function () {
         var _a;
         var schema = index_1.r.string().min(3).max(50).email().ui({ label: "Email" });
@@ -282,47 +426,101 @@ node_test_1.describe("Validator Additional Coverage", function () {
         node_assert_1["default"].strictEqual(json.positive, true);
         node_assert_1["default"].strictEqual((_a = json.ui) === null || _a === void 0 ? void 0 : _a.label, "Score");
     });
-    node_test_1.it("should handle URL validation edge cases", function () {
-        var schema = index_1.r.string().url();
-        // Valid URLs
-        node_assert_1["default"].strictEqual(index_1.Validator.validate(schema, "https://example.com").success, true);
-        node_assert_1["default"].strictEqual(index_1.Validator.validate(schema, "http://localhost:3000").success, true);
-        node_assert_1["default"].strictEqual(index_1.Validator.validate(schema, "https://sub.domain.com/path").success, true);
-        // Invalid URLs
-        node_assert_1["default"].strictEqual(index_1.Validator.validate(schema, "not a url").success, false);
-        node_assert_1["default"].strictEqual(index_1.Validator.validate(schema, "htp://invalid").success, false);
-        node_assert_1["default"].strictEqual(index_1.Validator.validate(schema, "//missing-protocol").success, false);
-    });
-    node_test_1.it("should handle email validation edge cases", function () {
-        var schema = index_1.r.string().email();
-        // Valid emails
-        node_assert_1["default"].strictEqual(index_1.Validator.validate(schema, "user@example.com").success, true);
-        // Invalid emails
-        node_assert_1["default"].strictEqual(index_1.Validator.validate(schema, "invalid").success, false);
-        node_assert_1["default"].strictEqual(index_1.Validator.validate(schema, "@example.com").success, false);
-    });
+    node_test_1.it("should handle URL validation edge cases", function () { return __awaiter(void 0, void 0, void 0, function () {
+        var schema, _a, _b, _c, _d, _e, _f, _g, _h, _j, _k, _l, _m;
+        return __generator(this, function (_o) {
+            switch (_o.label) {
+                case 0:
+                    schema = index_1.r.string().url();
+                    // Valid URLs
+                    _b = (_a = node_assert_1["default"]).strictEqual;
+                    return [4 /*yield*/, index_1.Validator.validate(schema, "https://example.com")];
+                case 1:
+                    // Valid URLs
+                    _b.apply(_a, [(_o.sent()).success, true]);
+                    _d = (_c = node_assert_1["default"]).strictEqual;
+                    return [4 /*yield*/, index_1.Validator.validate(schema, "http://localhost:3000")];
+                case 2:
+                    _d.apply(_c, [(_o.sent()).success, true]);
+                    _f = (_e = node_assert_1["default"]).strictEqual;
+                    return [4 /*yield*/, index_1.Validator.validate(schema, "https://sub.domain.com/path")];
+                case 3:
+                    _f.apply(_e, [(_o.sent()).success, true]);
+                    // Invalid URLs
+                    _h = (_g = node_assert_1["default"]).strictEqual;
+                    return [4 /*yield*/, index_1.Validator.validate(schema, "not a url")];
+                case 4:
+                    // Invalid URLs
+                    _h.apply(_g, [(_o.sent()).success, false]);
+                    _k = (_j = node_assert_1["default"]).strictEqual;
+                    return [4 /*yield*/, index_1.Validator.validate(schema, "htp://invalid")];
+                case 5:
+                    _k.apply(_j, [(_o.sent()).success, false]);
+                    _m = (_l = node_assert_1["default"]).strictEqual;
+                    return [4 /*yield*/, index_1.Validator.validate(schema, "//missing-protocol")];
+                case 6:
+                    _m.apply(_l, [(_o.sent()).success, false]);
+                    return [2 /*return*/];
+            }
+        });
+    }); });
+    node_test_1.it("should handle email validation edge cases", function () { return __awaiter(void 0, void 0, void 0, function () {
+        var schema, _a, _b, _c, _d, _e, _f;
+        return __generator(this, function (_g) {
+            switch (_g.label) {
+                case 0:
+                    schema = index_1.r.string().email();
+                    // Valid emails
+                    _b = (_a = node_assert_1["default"]).strictEqual;
+                    return [4 /*yield*/, index_1.Validator.validate(schema, "user@example.com")];
+                case 1:
+                    // Valid emails
+                    _b.apply(_a, [(_g.sent()).success, true]);
+                    // Invalid emails
+                    _d = (_c = node_assert_1["default"]).strictEqual;
+                    return [4 /*yield*/, index_1.Validator.validate(schema, "invalid")];
+                case 2:
+                    // Invalid emails
+                    _d.apply(_c, [(_g.sent()).success, false]);
+                    _f = (_e = node_assert_1["default"]).strictEqual;
+                    return [4 /*yield*/, index_1.Validator.validate(schema, "@example.com")];
+                case 3:
+                    _f.apply(_e, [(_g.sent()).success, false]);
+                    return [2 /*return*/];
+            }
+        });
+    }); });
 });
 node_test_1.describe("Schema Builder Edge Cases", function () {
-    node_test_1.it("should handle object with mixed types", function () {
-        var schema = index_1.r.object({
-            id: index_1.r.number().integer().positive(),
-            name: index_1.r.string().min(1),
-            email: index_1.r.string().email(),
-            age: index_1.r.number().min(0).max(150),
-            verified: index_1.r.boolean(),
-            website: index_1.r.string().url()
+    node_test_1.it("should handle object with mixed types", function () { return __awaiter(void 0, void 0, void 0, function () {
+        var schema, validData, result;
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0:
+                    schema = index_1.r.object({
+                        id: index_1.r.number().integer().positive(),
+                        name: index_1.r.string().min(1),
+                        email: index_1.r.string().email(),
+                        age: index_1.r.number().min(0).max(150),
+                        verified: index_1.r.boolean(),
+                        website: index_1.r.string().url()
+                    });
+                    validData = {
+                        id: 123,
+                        name: "John Doe",
+                        email: "john@example.com",
+                        age: 30,
+                        verified: true,
+                        website: "https://example.com"
+                    };
+                    return [4 /*yield*/, index_1.Validator.safeParse(schema, validData)];
+                case 1:
+                    result = _a.sent();
+                    node_assert_1["default"].strictEqual(result.success, true);
+                    return [2 /*return*/];
+            }
         });
-        var validData = {
-            id: 123,
-            name: "John Doe",
-            email: "john@example.com",
-            age: 30,
-            verified: true,
-            website: "https://example.com"
-        };
-        var result = index_1.Validator.safeParse(schema, validData);
-        node_assert_1["default"].strictEqual(result.success, true);
-    });
+    }); });
     node_test_1.it("should handle schema toJSON serialization", function () {
         var schema = index_1.r.object({
             username: index_1.r.string().min(3).max(20),
@@ -336,24 +534,74 @@ node_test_1.describe("Schema Builder Edge Cases", function () {
         node_assert_1["default"].strictEqual(json.shape.username.min, 3);
         node_assert_1["default"].strictEqual(json.shape.username.max, 20);
     });
-    node_test_1.it("should validate integer constraint strictly", function () {
-        var schema = index_1.r.number().integer();
-        node_assert_1["default"].strictEqual(index_1.Validator.validate(schema, 42).success, true);
-        node_assert_1["default"].strictEqual(index_1.Validator.validate(schema, 0).success, true);
-        node_assert_1["default"].strictEqual(index_1.Validator.validate(schema, -10).success, true);
-        node_assert_1["default"].strictEqual(index_1.Validator.validate(schema, 3.14).success, false);
-        node_assert_1["default"].strictEqual(index_1.Validator.validate(schema, 0.1).success, false);
-        node_assert_1["default"].strictEqual(index_1.Validator.validate(schema, -5.5).success, false);
-    });
-    node_test_1.it("should handle min/max boundaries correctly", function () {
-        var schema = index_1.r.number().min(10).max(20);
-        // Boundaries
-        node_assert_1["default"].strictEqual(index_1.Validator.validate(schema, 10).success, true);
-        node_assert_1["default"].strictEqual(index_1.Validator.validate(schema, 20).success, true);
-        // Within range
-        node_assert_1["default"].strictEqual(index_1.Validator.validate(schema, 15).success, true);
-        // Outside range
-        node_assert_1["default"].strictEqual(index_1.Validator.validate(schema, 9).success, false);
-        node_assert_1["default"].strictEqual(index_1.Validator.validate(schema, 21).success, false);
-    });
+    node_test_1.it("should validate integer constraint strictly", function () { return __awaiter(void 0, void 0, void 0, function () {
+        var schema, _a, _b, _c, _d, _e, _f, _g, _h, _j, _k, _l, _m;
+        return __generator(this, function (_o) {
+            switch (_o.label) {
+                case 0:
+                    schema = index_1.r.number().integer();
+                    _b = (_a = node_assert_1["default"]).strictEqual;
+                    return [4 /*yield*/, index_1.Validator.validate(schema, 42)];
+                case 1:
+                    _b.apply(_a, [(_o.sent()).success, true]);
+                    _d = (_c = node_assert_1["default"]).strictEqual;
+                    return [4 /*yield*/, index_1.Validator.validate(schema, 0)];
+                case 2:
+                    _d.apply(_c, [(_o.sent()).success, true]);
+                    _f = (_e = node_assert_1["default"]).strictEqual;
+                    return [4 /*yield*/, index_1.Validator.validate(schema, -10)];
+                case 3:
+                    _f.apply(_e, [(_o.sent()).success, true]);
+                    _h = (_g = node_assert_1["default"]).strictEqual;
+                    return [4 /*yield*/, index_1.Validator.validate(schema, 3.14)];
+                case 4:
+                    _h.apply(_g, [(_o.sent()).success, false]);
+                    _k = (_j = node_assert_1["default"]).strictEqual;
+                    return [4 /*yield*/, index_1.Validator.validate(schema, 0.1)];
+                case 5:
+                    _k.apply(_j, [(_o.sent()).success, false]);
+                    _m = (_l = node_assert_1["default"]).strictEqual;
+                    return [4 /*yield*/, index_1.Validator.validate(schema, -5.5)];
+                case 6:
+                    _m.apply(_l, [(_o.sent()).success, false]);
+                    return [2 /*return*/];
+            }
+        });
+    }); });
+    node_test_1.it("should handle min/max boundaries correctly", function () { return __awaiter(void 0, void 0, void 0, function () {
+        var schema, _a, _b, _c, _d, _e, _f, _g, _h, _j, _k;
+        return __generator(this, function (_l) {
+            switch (_l.label) {
+                case 0:
+                    schema = index_1.r.number().min(10).max(20);
+                    // Boundaries
+                    _b = (_a = node_assert_1["default"]).strictEqual;
+                    return [4 /*yield*/, index_1.Validator.validate(schema, 10)];
+                case 1:
+                    // Boundaries
+                    _b.apply(_a, [(_l.sent()).success, true]);
+                    _d = (_c = node_assert_1["default"]).strictEqual;
+                    return [4 /*yield*/, index_1.Validator.validate(schema, 20)];
+                case 2:
+                    _d.apply(_c, [(_l.sent()).success, true]);
+                    // Within range
+                    _f = (_e = node_assert_1["default"]).strictEqual;
+                    return [4 /*yield*/, index_1.Validator.validate(schema, 15)];
+                case 3:
+                    // Within range
+                    _f.apply(_e, [(_l.sent()).success, true]);
+                    // Outside range
+                    _h = (_g = node_assert_1["default"]).strictEqual;
+                    return [4 /*yield*/, index_1.Validator.validate(schema, 9)];
+                case 4:
+                    // Outside range
+                    _h.apply(_g, [(_l.sent()).success, false]);
+                    _k = (_j = node_assert_1["default"]).strictEqual;
+                    return [4 /*yield*/, index_1.Validator.validate(schema, 21)];
+                case 5:
+                    _k.apply(_j, [(_l.sent()).success, false]);
+                    return [2 /*return*/];
+            }
+        });
+    }); });
 });

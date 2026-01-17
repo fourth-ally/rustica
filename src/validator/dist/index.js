@@ -54,49 +54,66 @@ exports.createValidator = exports.ValidationException = exports.Validator = expo
  * Lazy-loaded WASM module singleton
  */
 var wasmModule = null;
+var wasmInitPromise = null;
 /**
  * Initialize WASM module
- * Must be called before validation
+ * Can be called explicitly for eager loading, or will auto-initialize on first use
  */
 function initWasm() {
     return __awaiter(this, void 0, Promise, function () {
-        var module, error_1;
+        var _this = this;
         return __generator(this, function (_a) {
-            switch (_a.label) {
-                case 0:
-                    if (wasmModule)
-                        return [2 /*return*/];
-                    _a.label = 1;
-                case 1:
-                    _a.trys.push([1, 5, , 6]);
-                    return [4 /*yield*/, Promise.resolve().then(function () { return require("../../pkg/rustica.js"); })];
-                case 2:
-                    module = (_a.sent());
-                    if (!(typeof module["default"] === "function")) return [3 /*break*/, 4];
-                    return [4 /*yield*/, module["default"]()];
-                case 3:
-                    _a.sent();
-                    _a.label = 4;
-                case 4:
-                    wasmModule = module;
-                    return [3 /*break*/, 6];
-                case 5:
-                    error_1 = _a.sent();
-                    throw new Error("Failed to load WASM module. Make sure to run 'npm run build:wasm' first. Error: " + error_1);
-                case 6: return [2 /*return*/];
-            }
+            if (wasmModule)
+                return [2 /*return*/];
+            if (wasmInitPromise)
+                return [2 /*return*/, wasmInitPromise];
+            wasmInitPromise = (function () { return __awaiter(_this, void 0, void 0, function () {
+                var module, error_1;
+                return __generator(this, function (_a) {
+                    switch (_a.label) {
+                        case 0:
+                            _a.trys.push([0, 4, , 5]);
+                            return [4 /*yield*/, Promise.resolve().then(function () { return require("../../pkg/rustica.js"); })];
+                        case 1:
+                            module = (_a.sent());
+                            if (!(typeof module["default"] === "function")) return [3 /*break*/, 3];
+                            return [4 /*yield*/, module["default"]()];
+                        case 2:
+                            _a.sent();
+                            _a.label = 3;
+                        case 3:
+                            wasmModule = module;
+                            return [3 /*break*/, 5];
+                        case 4:
+                            error_1 = _a.sent();
+                            wasmInitPromise = null; // Reset on error so it can be retried
+                            throw new Error("Failed to load WASM module. Make sure to run 'npm run build:wasm' first. Error: " + error_1);
+                        case 5: return [2 /*return*/];
+                    }
+                });
+            }); })();
+            return [2 /*return*/, wasmInitPromise];
         });
     });
 }
 exports.initWasm = initWasm;
 /**
- * Get initialized WASM module
+ * Get initialized WASM module (auto-initializes if needed)
  */
 function getWasm() {
-    if (!wasmModule) {
-        throw new Error("WASM module not initialized. Call initWasm() before validation.");
-    }
-    return wasmModule;
+    return __awaiter(this, void 0, Promise, function () {
+        return __generator(this, function (_a) {
+            switch (_a.label) {
+                case 0:
+                    if (!!wasmModule) return [3 /*break*/, 2];
+                    return [4 /*yield*/, initWasm()];
+                case 1:
+                    _a.sent();
+                    _a.label = 2;
+                case 2: return [2 /*return*/, wasmModule];
+            }
+        });
+    });
 }
 /**
  * Core validator using WASM
@@ -106,25 +123,33 @@ var Validator = /** @class */ (function () {
     }
     /**
      * Validate data against a schema
+     * Auto-initializes WASM on first use
      *
      * @param schema - Schema definition (builder or JSON)
      * @param value - Data to validate
      * @returns Validation result with errors if any
      */
     Validator.validate = function (schema, value) {
-        var wasm = getWasm();
-        // Serialize schema to JSON
-        var schemaJson = JSON.stringify(schema instanceof Object && "toJSON" in schema ? schema.toJSON() : schema);
-        // Serialize value to JSON
-        var valueJson = JSON.stringify(value);
-        // Call WASM validator (single call, zero-copy)
-        var resultJson = wasm.WasmValidator.validate(schemaJson, valueJson);
-        // Parse result
-        return JSON.parse(resultJson);
+        return __awaiter(this, void 0, Promise, function () {
+            var wasm, schemaJson, valueJson, resultJson;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0: return [4 /*yield*/, getWasm()];
+                    case 1:
+                        wasm = _a.sent();
+                        schemaJson = JSON.stringify(schema instanceof Object && "toJSON" in schema ? schema.toJSON() : schema);
+                        valueJson = JSON.stringify(value);
+                        resultJson = wasm.WasmValidator.validate(schemaJson, valueJson);
+                        // Parse result
+                        return [2 /*return*/, JSON.parse(resultJson)];
+                }
+            });
+        });
     };
     /**
      * Validate data at a specific path in the schema
      * Useful for field-level validation in forms
+     * Auto-initializes WASM on first use
      *
      * @param schema - Schema definition
      * @param value - Complete data object
@@ -132,37 +157,65 @@ var Validator = /** @class */ (function () {
      * @returns Validation result for the specific field
      */
     Validator.validateAtPath = function (schema, value, path) {
-        var wasm = getWasm();
-        // Serialize inputs
-        var schemaJson = JSON.stringify(schema instanceof Object && "toJSON" in schema ? schema.toJSON() : schema);
-        var valueJson = JSON.stringify(value);
-        var pathJson = JSON.stringify(path);
-        // Call WASM validator (single call)
-        var resultJson = wasm.WasmValidator.validate_at_path(schemaJson, valueJson, pathJson);
-        // Parse result
-        return JSON.parse(resultJson);
+        return __awaiter(this, void 0, Promise, function () {
+            var wasm, schemaJson, valueJson, pathJson, resultJson;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0: return [4 /*yield*/, getWasm()];
+                    case 1:
+                        wasm = _a.sent();
+                        schemaJson = JSON.stringify(schema instanceof Object && "toJSON" in schema ? schema.toJSON() : schema);
+                        valueJson = JSON.stringify(value);
+                        pathJson = JSON.stringify(path);
+                        resultJson = wasm.WasmValidator.validate_at_path(schemaJson, valueJson, pathJson);
+                        // Parse result
+                        return [2 /*return*/, JSON.parse(resultJson)];
+                }
+            });
+        });
     };
     /**
      * Validate and throw on error (for convenience)
+     * Auto-initializes WASM on first use
      */
     Validator.parse = function (schema, value) {
-        var result = this.validate(schema, value);
-        if (!result.success) {
-            throw new ValidationException(result.errors || []);
-        }
-        return value;
+        return __awaiter(this, void 0, Promise, function () {
+            var result;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0: return [4 /*yield*/, this.validate(schema, value)];
+                    case 1:
+                        result = _a.sent();
+                        if (!result.success) {
+                            throw new ValidationException(result.errors || []);
+                        }
+                        return [2 /*return*/, value];
+                }
+            });
+        });
     };
     /**
      * Safe parse that returns result object
+     * Auto-initializes WASM on first use
      */
     Validator.safeParse = function (schema, value) {
-        var result = this.validate(schema, value);
-        if (result.success) {
-            return { success: true, data: value };
-        }
-        else {
-            return { success: false, errors: result.errors || [] };
-        }
+        return __awaiter(this, void 0, Promise, function () {
+            var result;
+            return __generator(this, function (_a) {
+                switch (_a.label) {
+                    case 0: return [4 /*yield*/, this.validate(schema, value)];
+                    case 1:
+                        result = _a.sent();
+                        if (result.success) {
+                            return [2 /*return*/, { success: true, data: value }];
+                        }
+                        else {
+                            return [2 /*return*/, { success: false, errors: result.errors || [] }];
+                        }
+                        return [2 /*return*/];
+                }
+            });
+        });
     };
     return Validator;
 }());

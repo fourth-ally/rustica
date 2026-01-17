@@ -1,6 +1,6 @@
-import type { Schema, ValidationError } from '../schema/types';
-import type { SchemaBuilder } from '../schema/builders';
-import { Validator } from '../validator';
+import type { Schema, ValidationError } from "../schema/types";
+import type { SchemaBuilder } from "../schema/builders";
+import { Validator } from "../validator";
 
 /**
  * Form field state
@@ -47,8 +47,8 @@ export interface Form<T extends Record<string, any>> {
   // Methods
   setValue(field: keyof T, value: any): void;
   setTouched(field: keyof T, touched: boolean): void;
-  validateField(field: keyof T): ValidationError | null;
-  validateForm(): Record<keyof T, ValidationError | null>;
+  validateField(field: keyof T): Promise<ValidationError | null>;
+  validateForm(): Promise<Record<keyof T, ValidationError | null>>;
   handleBlur(field: keyof T): void;
   handleChange(field: keyof T, value: any): void;
   handleSubmit(event?: Event): Promise<void>;
@@ -58,7 +58,7 @@ export interface Form<T extends Record<string, any>> {
 
 /**
  * Create a form instance with validation
- * 
+ *
  * This is the core form runtime that manages:
  * - Form values
  * - Touch state
@@ -66,7 +66,7 @@ export interface Form<T extends Record<string, any>> {
  * - Submit handling
  */
 export function createForm<T extends Record<string, any>>(
-  config: FormConfig<T>
+  config: FormConfig<T>,
 ): Form<T> {
   const {
     schema,
@@ -81,11 +81,11 @@ export function createForm<T extends Record<string, any>>(
     values: { ...defaultValues },
     touched: Object.keys(defaultValues).reduce(
       (acc, key) => ({ ...acc, [key]: false }),
-      {} as Record<keyof T, boolean>
+      {} as Record<keyof T, boolean>,
     ),
     errors: Object.keys(defaultValues).reduce(
       (acc, key) => ({ ...acc, [key]: null }),
-      {} as Record<keyof T, ValidationError | null>
+      {} as Record<keyof T, ValidationError | null>,
     ),
     isSubmitting: false,
     isValid: true,
@@ -98,22 +98,26 @@ export function createForm<T extends Record<string, any>>(
    * Notify all subscribers of state change
    */
   function notify(): void {
-    listeners.forEach(listener => listener(state));
+    listeners.forEach((listener) => listener(state));
   }
 
   /**
    * Update isValid flag based on errors
    */
   function updateValidity(): void {
-    state.isValid = Object.values(state.errors).every(error => error === null);
+    state.isValid = Object.values(state.errors).every(
+      (error) => error === null,
+    );
   }
 
   /**
    * Validate a single field
    */
-  function validateField(field: keyof T): ValidationError | null {
+  async function validateField(
+    field: keyof T,
+  ): Promise<ValidationError | null> {
     const path = [String(field)];
-    const result = Validator.validateAtPath(schema, state.values, path);
+    const result = await Validator.validateAtPath(schema, state.values, path);
 
     if (!result.success && result.errors && result.errors.length > 0) {
       // Return the first error for this field
@@ -126,9 +130,13 @@ export function createForm<T extends Record<string, any>>(
   /**
    * Validate entire form
    */
-  function validateForm(): Record<keyof T, ValidationError | null> {
-    const result = Validator.validate(schema, state.values);
-    const fieldErrors: Record<keyof T, ValidationError | null> = { ...state.errors };
+  async function validateForm(): Promise<
+    Record<keyof T, ValidationError | null>
+  > {
+    const result = await Validator.validate(schema, state.values);
+    const fieldErrors: Record<keyof T, ValidationError | null> = {
+      ...state.errors,
+    };
 
     // Clear all errors first
     for (const key in fieldErrors) {
@@ -157,9 +165,11 @@ export function createForm<T extends Record<string, any>>(
     state.values[field] = value;
 
     if (validateOnChange) {
-      const error = validateField(field);
-      state.errors[field] = error;
-      updateValidity();
+      validateField(field).then((error) => {
+        state.errors[field] = error;
+        updateValidity();
+        notify();
+      });
     }
 
     notify();
@@ -180,12 +190,14 @@ export function createForm<T extends Record<string, any>>(
     state.touched[field] = true;
 
     if (validateOnBlur) {
-      const error = validateField(field);
-      state.errors[field] = error;
-      updateValidity();
+      validateField(field).then((error) => {
+        state.errors[field] = error;
+        updateValidity();
+        notify();
+      });
+    } else {
+      notify();
     }
-
-    notify();
   }
 
   /**
@@ -209,7 +221,7 @@ export function createForm<T extends Record<string, any>>(
     }
 
     // Validate entire form
-    state.errors = validateForm();
+    state.errors = await validateForm();
     updateValidity();
     state.isSubmitting = true;
     notify();
@@ -219,7 +231,7 @@ export function createForm<T extends Record<string, any>>(
       try {
         await onSubmit(state.values);
       } catch (error) {
-        console.error('Form submission error:', error);
+        console.error("Form submission error:", error);
       }
     }
 
@@ -235,11 +247,11 @@ export function createForm<T extends Record<string, any>>(
       values: { ...defaultValues },
       touched: Object.keys(defaultValues).reduce(
         (acc, key) => ({ ...acc, [key]: false }),
-        {} as Record<keyof T, boolean>
+        {} as Record<keyof T, boolean>,
       ),
       errors: Object.keys(defaultValues).reduce(
         (acc, key) => ({ ...acc, [key]: null }),
-        {} as Record<keyof T, ValidationError | null>
+        {} as Record<keyof T, ValidationError | null>,
       ),
       isSubmitting: false,
       isValid: true,
@@ -252,7 +264,7 @@ export function createForm<T extends Record<string, any>>(
    */
   function subscribe(listener: (state: FormState<T>) => void): () => void {
     listeners.add(listener);
-    
+
     // Return unsubscribe function
     return () => {
       listeners.delete(listener);

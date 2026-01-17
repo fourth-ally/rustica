@@ -24,41 +24,46 @@ export interface WasmModule {
  * Lazy-loaded WASM module singleton
  */
 let wasmModule: WasmModule | null = null;
+let wasmInitPromise: Promise<void> | null = null;
 
 /**
  * Initialize WASM module
- * Must be called before validation
+ * Can be called explicitly for eager loading, or will auto-initialize on first use
  */
 export async function initWasm(): Promise<void> {
   if (wasmModule) return;
+  if (wasmInitPromise) return wasmInitPromise;
 
-  try {
-    // Dynamic import of WASM module
-    const module = (await import("../../pkg/rustica.js")) as any;
+  wasmInitPromise = (async () => {
+    try {
+      // Dynamic import of WASM module
+      const module = (await import("../../pkg/rustica.js")) as any;
 
-    // For web target, call init function. For nodejs target, it's already loaded
-    if (typeof module.default === "function") {
-      await module.default();
+      // For web target, call init function. For nodejs target, it's already loaded
+      if (typeof module.default === "function") {
+        await module.default();
+      }
+
+      wasmModule = module;
+    } catch (error) {
+      wasmInitPromise = null; // Reset on error so it can be retried
+      throw new Error(
+        `Failed to load WASM module. Make sure to run 'npm run build:wasm' first. Error: ${error}`,
+      );
     }
+  })();
 
-    wasmModule = module;
-  } catch (error) {
-    throw new Error(
-      `Failed to load WASM module. Make sure to run 'npm run build:wasm' first. Error: ${error}`,
-    );
-  }
+  return wasmInitPromise;
 }
 
 /**
- * Get initialized WASM module
+ * Get initialized WASM module (auto-initializes if needed)
  */
-function getWasm(): WasmModule {
+async function getWasm(): Promise<WasmModule> {
   if (!wasmModule) {
-    throw new Error(
-      "WASM module not initialized. Call initWasm() before validation.",
-    );
+    await initWasm();
   }
-  return wasmModule;
+  return wasmModule!;
 }
 
 /**
@@ -67,16 +72,17 @@ function getWasm(): WasmModule {
 export class Validator {
   /**
    * Validate data against a schema
+   * Auto-initializes WASM on first use
    *
    * @param schema - Schema definition (builder or JSON)
    * @param value - Data to validate
    * @returns Validation result with errors if any
    */
-  static validate<T>(
+  static async validate<T>(
     schema: SchemaBuilder<T> | Schema,
     value: unknown,
-  ): ValidationResult {
-    const wasm = getWasm();
+  ): Promise<ValidationResult> {
+    const wasm = await getWasm();
 
     // Serialize schema to JSON
     const schemaJson = JSON.stringify(
@@ -96,18 +102,19 @@ export class Validator {
   /**
    * Validate data at a specific path in the schema
    * Useful for field-level validation in forms
+   * Auto-initializes WASM on first use
    *
    * @param schema - Schema definition
    * @param value - Complete data object
    * @param path - Path to validate (e.g., ['user', 'email'])
    * @returns Validation result for the specific field
    */
-  static validateAtPath<T>(
+  static async validateAtPath<T>(
     schema: SchemaBuilder<T> | Schema,
     value: unknown,
     path: string[],
-  ): ValidationResult {
-    const wasm = getWasm();
+  ): Promise<ValidationResult> {
+    const wasm = await getWasm();
 
     // Serialize inputs
     const schemaJson = JSON.stringify(
@@ -129,9 +136,13 @@ export class Validator {
 
   /**
    * Validate and throw on error (for convenience)
+   * Auto-initializes WASM on first use
    */
-  static parse<T>(schema: SchemaBuilder<T> | Schema, value: unknown): T {
-    const result = this.validate(schema, value);
+  static async parse<T>(
+    schema: SchemaBuilder<T> | Schema,
+    value: unknown,
+  ): Promise<T> {
+    const result = await this.validate(schema, value);
 
     if (!result.success) {
       throw new ValidationException(result.errors || []);
@@ -142,14 +153,15 @@ export class Validator {
 
   /**
    * Safe parse that returns result object
+   * Auto-initializes WASM on first use
    */
-  static safeParse<T>(
+  static async safeParse<T>(
     schema: SchemaBuilder<T> | Schema,
     value: unknown,
-  ):
-    | { success: true; data: T }
-    | { success: false; errors: ValidationError[] } {
-    const result = this.validate(schema, value);
+  ): Promise<
+    { success: true; data: T } | { success: false; errors: ValidationError[] }
+  > {
+    const result = await this.validate(schema, value);
 
     if (result.success) {
       return { success: true, data: value as T };

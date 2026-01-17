@@ -11,6 +11,8 @@ before(async () => {
   await initWasm();
 });
 
+const flushAsync = () => new Promise<void>((resolve) => setTimeout(resolve, 0));
+
 describe("Schema Builders", () => {
   test("r.string() creates string schema", () => {
     const schema = r.string();
@@ -68,140 +70,161 @@ describe("Schema Builders", () => {
 });
 
 describe("String Validation", () => {
-  test("validates valid string", () => {
+  test("validates valid string", async () => {
     const schema = r.string();
-    const result = Validator.validate(schema, "hello");
+    const result = await Validator.validate(schema, "hello");
     assert.strictEqual(result.success, true);
   });
 
-  test("rejects non-string", () => {
+  test("rejects non-string", async () => {
     const schema = r.string();
-    const result = Validator.validate(schema, 123);
+    const result = await Validator.validate(schema, 123);
     assert.strictEqual(result.success, false);
     assert(result.errors?.[0].code === "invalid_type");
   });
 
-  test("validates min length", () => {
+  test("validates min length", async () => {
     const schema = r.string().min(5);
-    assert.strictEqual(Validator.validate(schema, "hello").success, true);
-    assert.strictEqual(Validator.validate(schema, "hi").success, false);
+    assert.strictEqual(
+      (await Validator.validate(schema, "hello")).success,
+      true,
+    );
+    assert.strictEqual((await Validator.validate(schema, "hi")).success, false);
   });
 
-  test("validates max length", () => {
+  test("validates max length", async () => {
     const schema = r.string().max(5);
-    assert.strictEqual(Validator.validate(schema, "hello").success, true);
-    assert.strictEqual(Validator.validate(schema, "toolong").success, false);
+    assert.strictEqual(
+      (await Validator.validate(schema, "hello")).success,
+      true,
+    );
+    assert.strictEqual(
+      (await Validator.validate(schema, "toolong")).success,
+      false,
+    );
   });
 
-  test("validates email", () => {
+  test("validates email", async () => {
     const schema = r.string().email();
     assert.strictEqual(
-      Validator.validate(schema, "test@example.com").success,
+      (await Validator.validate(schema, "test@example.com")).success,
       true,
     );
-    assert.strictEqual(Validator.validate(schema, "invalid").success, false);
+    assert.strictEqual(
+      (await Validator.validate(schema, "invalid")).success,
+      false,
+    );
   });
 
-  test("validates URL", () => {
+  test("validates URL", async () => {
     const schema = r.string().url();
     assert.strictEqual(
-      Validator.validate(schema, "https://example.com").success,
+      (await Validator.validate(schema, "https://example.com")).success,
       true,
     );
-    assert.strictEqual(Validator.validate(schema, "not-a-url").success, false);
+    assert.strictEqual(
+      (await Validator.validate(schema, "not-a-url")).success,
+      false,
+    );
   });
 });
 
 describe("Number Validation", () => {
-  test("validates valid number", () => {
+  test("validates valid number", async () => {
     const schema = r.number();
-    const result = Validator.validate(schema, 42);
+    const result = await Validator.validate(schema, 42);
     assert.strictEqual(result.success, true);
   });
 
-  test("rejects non-number", () => {
+  test("rejects non-number", async () => {
     const schema = r.number();
-    const result = Validator.validate(schema, "not a number");
+    const result = await Validator.validate(schema, "not a number");
     assert.strictEqual(result.success, false);
   });
 
-  test("validates min value", () => {
+  test("validates min value", async () => {
     const schema = r.number().min(10);
-    assert.strictEqual(Validator.validate(schema, 15).success, true);
-    assert.strictEqual(Validator.validate(schema, 5).success, false);
+    assert.strictEqual((await Validator.validate(schema, 15)).success, true);
+    assert.strictEqual((await Validator.validate(schema, 5)).success, false);
   });
 
-  test("validates max value", () => {
+  test("validates max value", async () => {
     const schema = r.number().max(100);
-    assert.strictEqual(Validator.validate(schema, 50).success, true);
-    assert.strictEqual(Validator.validate(schema, 150).success, false);
+    assert.strictEqual((await Validator.validate(schema, 50)).success, true);
+    assert.strictEqual((await Validator.validate(schema, 150)).success, false);
   });
 
-  test("validates integer", () => {
+  test("validates integer", async () => {
     const schema = r.number().integer();
-    assert.strictEqual(Validator.validate(schema, 42).success, true);
-    assert.strictEqual(Validator.validate(schema, 42.5).success, false);
+    assert.strictEqual((await Validator.validate(schema, 42)).success, true);
+    assert.strictEqual((await Validator.validate(schema, 42.5)).success, false);
   });
 
-  test("validates positive", () => {
+  test("validates positive", async () => {
     const schema = r.number().positive();
-    assert.strictEqual(Validator.validate(schema, 5).success, true);
-    assert.strictEqual(Validator.validate(schema, -5).success, false);
-    assert.strictEqual(Validator.validate(schema, 0).success, false);
+    assert.strictEqual((await Validator.validate(schema, 5)).success, true);
+    assert.strictEqual((await Validator.validate(schema, -5)).success, false);
+    assert.strictEqual((await Validator.validate(schema, 0)).success, false);
   });
 });
 
 describe("Boolean Validation", () => {
-  test("validates valid boolean", () => {
+  test("validates valid boolean", async () => {
     const schema = r.boolean();
-    assert.strictEqual(Validator.validate(schema, true).success, true);
-    assert.strictEqual(Validator.validate(schema, false).success, true);
+    assert.strictEqual((await Validator.validate(schema, true)).success, true);
+    assert.strictEqual((await Validator.validate(schema, false)).success, true);
   });
 
-  test("rejects non-boolean", () => {
+  test("rejects non-boolean", async () => {
     const schema = r.boolean();
-    assert.strictEqual(Validator.validate(schema, "true").success, false);
-    assert.strictEqual(Validator.validate(schema, 1).success, false);
+    assert.strictEqual(
+      (await Validator.validate(schema, "true")).success,
+      false,
+    );
+    assert.strictEqual((await Validator.validate(schema, 1)).success, false);
   });
 });
 
 describe("Object Validation", () => {
-  test("validates valid object", () => {
+  test("validates valid object", async () => {
     const schema = r.object({
       name: r.string(),
       age: r.number(),
     });
-    const result = Validator.validate(schema, { name: "John", age: 30 });
+    const result = await Validator.validate(schema, { name: "John", age: 30 });
     assert.strictEqual(result.success, true);
   });
 
-  test("rejects invalid object", () => {
+  test("rejects invalid object", async () => {
     const schema = r.object({
       name: r.string(),
       age: r.number(),
     });
-    const result = Validator.validate(schema, { name: "John", age: "thirty" });
+    const result = await Validator.validate(schema, {
+      name: "John",
+      age: "thirty",
+    });
     assert.strictEqual(result.success, false);
   });
 
-  test("requires all fields", () => {
+  test("requires all fields", async () => {
     const schema = r.object({
       name: r.string(),
       age: r.number(),
     });
-    const result = Validator.validate(schema, { name: "John" });
+    const result = await Validator.validate(schema, { name: "John" });
     assert.strictEqual(result.success, false);
     assert(result.errors?.some((e) => e.code === "required"));
   });
 
-  test("validates nested objects", () => {
+  test("validates nested objects", async () => {
     const schema = r.object({
       user: r.object({
         name: r.string(),
         email: r.string().email(),
       }),
     });
-    const result = Validator.validate(schema, {
+    const result = await Validator.validate(schema, {
       user: { name: "John", email: "john@example.com" },
     });
     assert.strictEqual(result.success, true);
@@ -209,62 +232,65 @@ describe("Object Validation", () => {
 });
 
 describe("Path Validation", () => {
-  test("validates at specific path", () => {
+  test("validates at specific path", async () => {
     const schema = r.object({
       email: r.string().email(),
     });
     const data = { email: "test@example.com" };
-    const result = Validator.validateAtPath(schema, data, ["email"]);
+    const result = await Validator.validateAtPath(schema, data, ["email"]);
     assert.strictEqual(result.success, true);
   });
 
-  test("detects error at specific path", () => {
+  test("detects error at specific path", async () => {
     const schema = r.object({
       email: r.string().email(),
     });
     const data = { email: "invalid" };
-    const result = Validator.validateAtPath(schema, data, ["email"]);
+    const result = await Validator.validateAtPath(schema, data, ["email"]);
     assert.strictEqual(result.success, false);
   });
 
-  test("validates nested path", () => {
+  test("validates nested path", async () => {
     const schema = r.object({
       user: r.object({
         email: r.string().email(),
       }),
     });
     const data = { user: { email: "test@example.com" } };
-    const result = Validator.validateAtPath(schema, data, ["user", "email"]);
+    const result = await Validator.validateAtPath(schema, data, [
+      "user",
+      "email",
+    ]);
     assert.strictEqual(result.success, true);
   });
 });
 
 describe("Validator Methods", () => {
-  test("parse() returns data on success", () => {
+  test("parse() returns data on success", async () => {
     const schema = r.string();
-    const result = Validator.parse(schema, "hello");
+    const result = await Validator.parse(schema, "hello");
     assert.strictEqual(result, "hello");
   });
 
-  test("parse() throws on failure", () => {
+  test("parse() throws on failure", async () => {
     const schema = r.string().email();
-    assert.throws(() => {
-      Validator.parse(schema, "invalid");
+    await assert.rejects(async () => {
+      await Validator.parse(schema, "invalid");
     });
   });
 
-  test("safeParse() returns success result", () => {
+  test("safeParse() returns success result", async () => {
     const schema = r.string();
-    const result = Validator.safeParse(schema, "hello");
+    const result = await Validator.safeParse(schema, "hello");
     assert.strictEqual(result.success, true);
     if (result.success) {
       assert.strictEqual(result.data, "hello");
     }
   });
 
-  test("safeParse() returns error result", () => {
+  test("safeParse() returns error result", async () => {
     const schema = r.string().email();
-    const result = Validator.safeParse(schema, "invalid");
+    const result = await Validator.safeParse(schema, "invalid");
     assert.strictEqual(result.success, false);
     if (!result.success) {
       assert(result.errors.length > 0);
@@ -325,7 +351,7 @@ describe("Form Runtime", () => {
     assert.strictEqual(form.values.name, "John");
   });
 
-  test("validates field on blur", () => {
+  test("validates field on blur", async () => {
     const schema = r.object({
       email: r.string().email(),
     });
@@ -337,10 +363,11 @@ describe("Form Runtime", () => {
     });
     form.setValue("email", "invalid");
     form.handleBlur("email");
+    await flushAsync();
     assert(form.errors.email !== null);
   });
 
-  test("validates entire form", () => {
+  test("validates entire form", async () => {
     const schema = r.object({
       name: r.string().min(2),
       email: r.string().email(),
@@ -350,7 +377,7 @@ describe("Form Runtime", () => {
       defaultValues: { name: "J", email: "invalid" },
       onSubmit: () => {},
     });
-    const errors = form.validateForm();
+    const errors = await form.validateForm();
     assert(errors.name !== null);
     assert(errors.email !== null);
   });
@@ -388,9 +415,9 @@ describe("Form Runtime", () => {
 });
 
 describe("Error Structure", () => {
-  test("error has correct structure", () => {
+  test("error has correct structure", async () => {
     const schema = r.string().email();
-    const result = Validator.validate(schema, "invalid");
+    const result = await Validator.validate(schema, "invalid");
     assert.strictEqual(result.success, false);
     if (result.errors) {
       const error = result.errors[0];
@@ -400,13 +427,13 @@ describe("Error Structure", () => {
     }
   });
 
-  test("error includes path", () => {
+  test("error includes path", async () => {
     const schema = r.object({
       user: r.object({
         email: r.string().email(),
       }),
     });
-    const result = Validator.validate(schema, {
+    const result = await Validator.validate(schema, {
       user: { email: "invalid" },
     });
     assert.strictEqual(result.success, false);
@@ -418,7 +445,7 @@ describe("Error Structure", () => {
 });
 
 describe("Performance", () => {
-  test("validates quickly", () => {
+  test("validates quickly", async () => {
     const schema = r.object({
       name: r.string(),
       email: r.string().email(),
@@ -434,7 +461,7 @@ describe("Performance", () => {
     const start = performance.now();
 
     for (let i = 0; i < iterations; i++) {
-      Validator.validate(schema, data);
+      await Validator.validate(schema, data);
     }
 
     const end = performance.now();
