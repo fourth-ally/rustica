@@ -1,0 +1,44 @@
+{
+  "name": "rustica",
+  "version": "0.1.0",
+  "description": "Production-grade schema validation powered by Rust and WebAssembly",
+  "type": "module",
+  "main": "./dist/index.js",
+  "types": "./dist/index.d.ts",
+  "files": [
+    "dist",
+    "pkg"
+  ],
+  "scripts": {
+    "build:wasm": "wasm-pack build --target bundler --out-dir pkg",
+    "build:wasm:node": "wasm-pack build --target nodejs --out-dir pkg",
+    "build:ts": "tsc",
+    "build": "npm run build:wasm && npm run build:ts",
+    "dev": "tsc --watch",
+    "test": "cargo test && npm run test:ts",
+    "test:ts": "npm run build:wasm:node && node --import tsx --test tests/*.test.ts"
+  },
+  "keywords": [
+    "validation",
+    "schema",
+    "wasm",
+    "rust",
+    "zod",
+    "forms"
+  ],
+  "devDependencies": {
+    "@types/node": "^25.0.9",
+    "@types/react": "^18.2.0",
+    "react": "^18.2.0",
+    "tsx": "^4.7.0",
+    "typescript": "^5.3.0"
+  },
+  "peerDependencies": {
+    "react": ">=18.0.0"
+  },
+  "peerDependenciesMeta": {
+    "react": {
+      "optional": true
+    }
+  }
+}
