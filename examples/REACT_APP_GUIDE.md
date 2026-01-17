@@ -142,9 +142,9 @@ const API_URL = "https://your-api.com/endpoint";
 ### Modify Validation Rules
 
 ```typescript
-const userSchema = z.object({
-  email: z.string().email(),
-  phone: z.string().min(10).max(15), // Add new field
+const userSchema = r.object({
+  email: r.string().email(),
+  phone: r.string().min(10).max(15), // Add new field
   // ... other fields
 });
 ```

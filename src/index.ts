@@ -4,7 +4,7 @@
  */
 
 // Schema builder API
-export { r, z, n, type Infer, type UiConfig } from "./schema";
+export { r, type Infer, type UiConfig } from "./schema";
 export type {
   Schema,
   StringSchema,

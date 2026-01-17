@@ -10,7 +10,7 @@ var __exportStar = (this && this.__exportStar) || function(m, exports) {
     for (var p in m) if (p !== "default" && !exports.hasOwnProperty(p)) __createBinding(exports, m, p);
 };
 exports.__esModule = true;
-exports.SchemaBuilder = exports.ZObject = exports.ZBoolean = exports.ZNumber = exports.ZString = exports.n = exports.z = exports.r = void 0;
+exports.SchemaBuilder = exports.ZObject = exports.ZBoolean = exports.ZNumber = exports.ZString = exports.r = void 0;
 var builders_1 = require("./builders");
 exports.ZString = builders_1.ZString;
 exports.ZNumber = builders_1.ZNumber;
@@ -54,7 +54,4 @@ exports.r = {
         return new builders_1.ZObject(shape);
     }
 };
-// Keep 'z' and 'n' as aliases for backwards compatibility
-exports.z = exports.r;
-exports.n = exports.r;
 __exportStar(require("./types"), exports);

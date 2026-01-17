@@ -224,7 +224,9 @@ function App() {
           <div className="form-actions">
             <button
               type="submit"
-              disabled={form.isSubmitting || !((form.values as any).agreedToTerms)}
+              disabled={
+                form.isSubmitting || !(form.values as any).agreedToTerms
+              }
               className="btn-primary"
             >
               {form.isSubmitting ? "⏳ Submitting..." : "🚀 Submit to API"}

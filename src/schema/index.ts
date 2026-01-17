@@ -41,10 +41,6 @@ export const r = {
   },
 };
 
-// Keep 'z' and 'n' as aliases for backwards compatibility
-export const z = r;
-export const n = r;
-
 // Type inference utility
 export type Infer<T> = T extends SchemaBuilder<infer U> ? U : never;
 

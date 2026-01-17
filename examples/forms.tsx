@@ -1,5 +1,5 @@
 import React from "react";
-import { z, useWasmForm, initWasm, type Infer } from "../src/index";
+import { r, useWasmForm, initWasm, type Infer } from "../src/index";
 
 // Initialize WASM before using forms
 await initWasm();
@@ -7,16 +7,16 @@ await initWasm();
 /**
  * Example: Login form schema with validation
  */
-const loginSchema = z.object({
-  email: z.string().min(3).email().ui({
+const loginSchema = r.object({
+  email: r.string().min(3).email().ui({
     label: "Email Address",
     placeholder: "you@example.com",
   }),
-  password: z.string().min(8).ui({
+  password: r.string().min(8).ui({
     label: "Password",
     placeholder: "Min 8 characters",
   }),
-  remember: z.boolean().ui({ label: "Remember me" }),
+  remember: r.boolean().ui({ label: "Remember me" }),
 });
 
 // Type inference
@@ -166,15 +166,15 @@ export function LoginFormExample() {
 /**
  * Example: Registration form with more complex validation
  */
-const registrationSchema = z.object({
-  username: z.string().min(3).max(20).ui({ label: "Username" }),
-  email: z.string().min(3).email().ui({ label: "Email" }),
-  age: z.number().min(18).max(120).integer().ui({ label: "Age" }),
-  website: z
+const registrationSchema = r.object({
+  username: r.string().min(3).max(20).ui({ label: "Username" }),
+  email: r.string().min(3).email().ui({ label: "Email" }),
+  age: r.number().min(18).max(120).integer().ui({ label: "Age" }),
+  website: r
     .string()
     .url()
     .ui({ label: "Website", placeholder: "https://example.com" }),
-  agree: z.boolean().ui({ label: "I agree to terms and conditions" }),
+  agree: r.boolean().ui({ label: "I agree to terms and conditions" }),
 });
 
 type RegistrationForm = Infer<typeof registrationSchema>;

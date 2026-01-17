@@ -54,39 +54,39 @@ node_test_1.before(function () { return __awaiter(void 0, void 0, void 0, functi
     });
 }); });
 node_test_1.describe("Schema Builders", function () {
-    node_test_1.test("z.string() creates string schema", function () {
-        var schema = index_1.z.string();
+    node_test_1.test("r.string() creates string schema", function () {
+        var schema = index_1.r.string();
         var json = schema.toJSON();
         node_assert_1["default"].strictEqual(json.type, "string");
     });
-    node_test_1.test("z.string() with constraints", function () {
-        var schema = index_1.z.string().min(3).max(10).email();
+    node_test_1.test("r.string() with constraints", function () {
+        var schema = index_1.r.string().min(3).max(10).email();
         var json = schema.toJSON();
         node_assert_1["default"].strictEqual(json.min, 3);
         node_assert_1["default"].strictEqual(json.max, 10);
         node_assert_1["default"].strictEqual(json.email, true);
     });
-    node_test_1.test("z.number() creates number schema", function () {
-        var schema = index_1.z.number();
+    node_test_1.test("r.number() creates number schema", function () {
+        var schema = index_1.r.number();
         var json = schema.toJSON();
         node_assert_1["default"].strictEqual(json.type, "number");
     });
-    node_test_1.test("z.number() with constraints", function () {
-        var schema = index_1.z.number().min(0).max(100).integer();
+    node_test_1.test("r.number() with constraints", function () {
+        var schema = index_1.r.number().min(0).max(100).integer();
         var json = schema.toJSON();
         node_assert_1["default"].strictEqual(json.min, 0);
         node_assert_1["default"].strictEqual(json.max, 100);
         node_assert_1["default"].strictEqual(json.integer, true);
     });
-    node_test_1.test("z.boolean() creates boolean schema", function () {
-        var schema = index_1.z.boolean();
+    node_test_1.test("r.boolean() creates boolean schema", function () {
+        var schema = index_1.r.boolean();
         var json = schema.toJSON();
         node_assert_1["default"].strictEqual(json.type, "boolean");
     });
-    node_test_1.test("z.object() creates object schema", function () {
-        var schema = index_1.z.object({
-            name: index_1.z.string(),
-            age: index_1.z.number()
+    node_test_1.test("r.object() creates object schema", function () {
+        var schema = index_1.r.object({
+            name: index_1.r.string(),
+            age: index_1.r.number()
         });
         var json = schema.toJSON();
         node_assert_1["default"].strictEqual(json.type, "object");
@@ -95,7 +95,7 @@ node_test_1.describe("Schema Builders", function () {
     });
     node_test_1.test("UI configuration", function () {
         var _a, _b;
-        var schema = index_1.z
+        var schema = index_1.r
             .string()
             .ui({ label: "Email", placeholder: "test@example.com" });
         var json = schema.toJSON();
@@ -105,66 +105,66 @@ node_test_1.describe("Schema Builders", function () {
 });
 node_test_1.describe("String Validation", function () {
     node_test_1.test("validates valid string", function () {
-        var schema = index_1.z.string();
+        var schema = index_1.r.string();
         var result = index_1.Validator.validate(schema, "hello");
         node_assert_1["default"].strictEqual(result.success, true);
     });
     node_test_1.test("rejects non-string", function () {
         var _a;
-        var schema = index_1.z.string();
+        var schema = index_1.r.string();
         var result = index_1.Validator.validate(schema, 123);
         node_assert_1["default"].strictEqual(result.success, false);
         node_assert_1["default"](((_a = result.errors) === null || _a === void 0 ? void 0 : _a[0].code) === "invalid_type");
     });
     node_test_1.test("validates min length", function () {
-        var schema = index_1.z.string().min(5);
+        var schema = index_1.r.string().min(5);
         node_assert_1["default"].strictEqual(index_1.Validator.validate(schema, "hello").success, true);
         node_assert_1["default"].strictEqual(index_1.Validator.validate(schema, "hi").success, false);
     });
     node_test_1.test("validates max length", function () {
-        var schema = index_1.z.string().max(5);
+        var schema = index_1.r.string().max(5);
         node_assert_1["default"].strictEqual(index_1.Validator.validate(schema, "hello").success, true);
         node_assert_1["default"].strictEqual(index_1.Validator.validate(schema, "toolong").success, false);
     });
     node_test_1.test("validates email", function () {
-        var schema = index_1.z.string().email();
+        var schema = index_1.r.string().email();
         node_assert_1["default"].strictEqual(index_1.Validator.validate(schema, "test@example.com").success, true);
         node_assert_1["default"].strictEqual(index_1.Validator.validate(schema, "invalid").success, false);
     });
     node_test_1.test("validates URL", function () {
-        var schema = index_1.z.string().url();
+        var schema = index_1.r.string().url();
         node_assert_1["default"].strictEqual(index_1.Validator.validate(schema, "https://example.com").success, true);
         node_assert_1["default"].strictEqual(index_1.Validator.validate(schema, "not-a-url").success, false);
     });
 });
 node_test_1.describe("Number Validation", function () {
     node_test_1.test("validates valid number", function () {
-        var schema = index_1.z.number();
+        var schema = index_1.r.number();
         var result = index_1.Validator.validate(schema, 42);
         node_assert_1["default"].strictEqual(result.success, true);
     });
     node_test_1.test("rejects non-number", function () {
-        var schema = index_1.z.number();
+        var schema = index_1.r.number();
         var result = index_1.Validator.validate(schema, "not a number");
         node_assert_1["default"].strictEqual(result.success, false);
     });
     node_test_1.test("validates min value", function () {
-        var schema = index_1.z.number().min(10);
+        var schema = index_1.r.number().min(10);
         node_assert_1["default"].strictEqual(index_1.Validator.validate(schema, 15).success, true);
         node_assert_1["default"].strictEqual(index_1.Validator.validate(schema, 5).success, false);
     });
     node_test_1.test("validates max value", function () {
-        var schema = index_1.z.number().max(100);
+        var schema = index_1.r.number().max(100);
         node_assert_1["default"].strictEqual(index_1.Validator.validate(schema, 50).success, true);
         node_assert_1["default"].strictEqual(index_1.Validator.validate(schema, 150).success, false);
     });
     node_test_1.test("validates integer", function () {
-        var schema = index_1.z.number().integer();
+        var schema = index_1.r.number().integer();
         node_assert_1["default"].strictEqual(index_1.Validator.validate(schema, 42).success, true);
         node_assert_1["default"].strictEqual(index_1.Validator.validate(schema, 42.5).success, false);
     });
     node_test_1.test("validates positive", function () {
-        var schema = index_1.z.number().positive();
+        var schema = index_1.r.number().positive();
         node_assert_1["default"].strictEqual(index_1.Validator.validate(schema, 5).success, true);
         node_assert_1["default"].strictEqual(index_1.Validator.validate(schema, -5).success, false);
         node_assert_1["default"].strictEqual(index_1.Validator.validate(schema, 0).success, false);
@@ -172,48 +172,48 @@ node_test_1.describe("Number Validation", function () {
 });
 node_test_1.describe("Boolean Validation", function () {
     node_test_1.test("validates valid boolean", function () {
-        var schema = index_1.z.boolean();
+        var schema = index_1.r.boolean();
         node_assert_1["default"].strictEqual(index_1.Validator.validate(schema, true).success, true);
         node_assert_1["default"].strictEqual(index_1.Validator.validate(schema, false).success, true);
     });
     node_test_1.test("rejects non-boolean", function () {
-        var schema = index_1.z.boolean();
+        var schema = index_1.r.boolean();
         node_assert_1["default"].strictEqual(index_1.Validator.validate(schema, "true").success, false);
         node_assert_1["default"].strictEqual(index_1.Validator.validate(schema, 1).success, false);
     });
 });
 node_test_1.describe("Object Validation", function () {
     node_test_1.test("validates valid object", function () {
-        var schema = index_1.z.object({
-            name: index_1.z.string(),
-            age: index_1.z.number()
+        var schema = index_1.r.object({
+            name: index_1.r.string(),
+            age: index_1.r.number()
         });
         var result = index_1.Validator.validate(schema, { name: "John", age: 30 });
         node_assert_1["default"].strictEqual(result.success, true);
     });
     node_test_1.test("rejects invalid object", function () {
-        var schema = index_1.z.object({
-            name: index_1.z.string(),
-            age: index_1.z.number()
+        var schema = index_1.r.object({
+            name: index_1.r.string(),
+            age: index_1.r.number()
         });
         var result = index_1.Validator.validate(schema, { name: "John", age: "thirty" });
         node_assert_1["default"].strictEqual(result.success, false);
     });
     node_test_1.test("requires all fields", function () {
         var _a;
-        var schema = index_1.z.object({
-            name: index_1.z.string(),
-            age: index_1.z.number()
+        var schema = index_1.r.object({
+            name: index_1.r.string(),
+            age: index_1.r.number()
         });
         var result = index_1.Validator.validate(schema, { name: "John" });
         node_assert_1["default"].strictEqual(result.success, false);
         node_assert_1["default"]((_a = result.errors) === null || _a === void 0 ? void 0 : _a.some(function (e) { return e.code === "required"; }));
     });
     node_test_1.test("validates nested objects", function () {
-        var schema = index_1.z.object({
-            user: index_1.z.object({
-                name: index_1.z.string(),
-                email: index_1.z.string().email()
+        var schema = index_1.r.object({
+            user: index_1.r.object({
+                name: index_1.r.string(),
+                email: index_1.r.string().email()
             })
         });
         var result = index_1.Validator.validate(schema, {
@@ -224,25 +224,25 @@ node_test_1.describe("Object Validation", function () {
 });
 node_test_1.describe("Path Validation", function () {
     node_test_1.test("validates at specific path", function () {
-        var schema = index_1.z.object({
-            email: index_1.z.string().email()
+        var schema = index_1.r.object({
+            email: index_1.r.string().email()
         });
         var data = { email: "test@example.com" };
         var result = index_1.Validator.validateAtPath(schema, data, ["email"]);
         node_assert_1["default"].strictEqual(result.success, true);
     });
     node_test_1.test("detects error at specific path", function () {
-        var schema = index_1.z.object({
-            email: index_1.z.string().email()
+        var schema = index_1.r.object({
+            email: index_1.r.string().email()
         });
         var data = { email: "invalid" };
         var result = index_1.Validator.validateAtPath(schema, data, ["email"]);
         node_assert_1["default"].strictEqual(result.success, false);
     });
     node_test_1.test("validates nested path", function () {
-        var schema = index_1.z.object({
-            user: index_1.z.object({
-                email: index_1.z.string().email()
+        var schema = index_1.r.object({
+            user: index_1.r.object({
+                email: index_1.r.string().email()
             })
         });
         var data = { user: { email: "test@example.com" } };
@@ -252,18 +252,18 @@ node_test_1.describe("Path Validation", function () {
 });
 node_test_1.describe("Validator Methods", function () {
     node_test_1.test("parse() returns data on success", function () {
-        var schema = index_1.z.string();
+        var schema = index_1.r.string();
         var result = index_1.Validator.parse(schema, "hello");
         node_assert_1["default"].strictEqual(result, "hello");
     });
     node_test_1.test("parse() throws on failure", function () {
-        var schema = index_1.z.string().email();
+        var schema = index_1.r.string().email();
         node_assert_1["default"].throws(function () {
             index_1.Validator.parse(schema, "invalid");
         });
     });
     node_test_1.test("safeParse() returns success result", function () {
-        var schema = index_1.z.string();
+        var schema = index_1.r.string();
         var result = index_1.Validator.safeParse(schema, "hello");
         node_assert_1["default"].strictEqual(result.success, true);
         if (result.success) {
@@ -271,7 +271,7 @@ node_test_1.describe("Validator Methods", function () {
         }
     });
     node_test_1.test("safeParse() returns error result", function () {
-        var schema = index_1.z.string().email();
+        var schema = index_1.r.string().email();
         var result = index_1.Validator.safeParse(schema, "invalid");
         node_assert_1["default"].strictEqual(result.success, false);
         if (!result.success) {
@@ -281,19 +281,19 @@ node_test_1.describe("Validator Methods", function () {
 });
 node_test_1.describe("Type Inference", function () {
     node_test_1.test("infers string type", function () {
-        var schema = index_1.z.string();
+        var schema = index_1.r.string();
         var value = "test";
         node_assert_1["default"].strictEqual(typeof value, "string");
     });
     node_test_1.test("infers number type", function () {
-        var schema = index_1.z.number();
+        var schema = index_1.r.number();
         var value = 42;
         node_assert_1["default"].strictEqual(typeof value, "number");
     });
     node_test_1.test("infers object type", function () {
-        var schema = index_1.z.object({
-            name: index_1.z.string(),
-            age: index_1.z.number()
+        var schema = index_1.r.object({
+            name: index_1.r.string(),
+            age: index_1.r.number()
         });
         var value = { name: "John", age: 30 };
         node_assert_1["default"].strictEqual(value.name, "John");
@@ -302,9 +302,9 @@ node_test_1.describe("Type Inference", function () {
 });
 node_test_1.describe("Form Runtime", function () {
     node_test_1.test("creates form with default values", function () {
-        var schema = index_1.z.object({
-            name: index_1.z.string(),
-            email: index_1.z.string()
+        var schema = index_1.r.object({
+            name: index_1.r.string(),
+            email: index_1.r.string()
         });
         var form = index_1.createForm({
             schema: schema,
@@ -315,7 +315,7 @@ node_test_1.describe("Form Runtime", function () {
         node_assert_1["default"].strictEqual(form.values.email, "");
     });
     node_test_1.test("sets field value", function () {
-        var schema = index_1.z.object({ name: index_1.z.string() });
+        var schema = index_1.r.object({ name: index_1.r.string() });
         var form = index_1.createForm({
             schema: schema,
             defaultValues: { name: "" },
@@ -325,8 +325,8 @@ node_test_1.describe("Form Runtime", function () {
         node_assert_1["default"].strictEqual(form.values.name, "John");
     });
     node_test_1.test("validates field on blur", function () {
-        var schema = index_1.z.object({
-            email: index_1.z.string().email()
+        var schema = index_1.r.object({
+            email: index_1.r.string().email()
         });
         var form = index_1.createForm({
             schema: schema,
@@ -339,9 +339,9 @@ node_test_1.describe("Form Runtime", function () {
         node_assert_1["default"](form.errors.email !== null);
     });
     node_test_1.test("validates entire form", function () {
-        var schema = index_1.z.object({
-            name: index_1.z.string().min(2),
-            email: index_1.z.string().email()
+        var schema = index_1.r.object({
+            name: index_1.r.string().min(2),
+            email: index_1.r.string().email()
         });
         var form = index_1.createForm({
             schema: schema,
@@ -358,7 +358,7 @@ node_test_1.describe("Form Runtime", function () {
             switch (_a.label) {
                 case 0:
                     submitted = false;
-                    schema = index_1.z.object({ name: index_1.z.string() });
+                    schema = index_1.r.object({ name: index_1.r.string() });
                     form = index_1.createForm({
                         schema: schema,
                         defaultValues: { name: "John" },
@@ -377,7 +377,7 @@ node_test_1.describe("Form Runtime", function () {
     }); });
     node_test_1.test("subscribes to form changes", function () {
         var notified = false;
-        var schema = index_1.z.object({ name: index_1.z.string() });
+        var schema = index_1.r.object({ name: index_1.r.string() });
         var form = index_1.createForm({
             schema: schema,
             defaultValues: { name: "" },
@@ -393,7 +393,7 @@ node_test_1.describe("Form Runtime", function () {
 });
 node_test_1.describe("Error Structure", function () {
     node_test_1.test("error has correct structure", function () {
-        var schema = index_1.z.string().email();
+        var schema = index_1.r.string().email();
         var result = index_1.Validator.validate(schema, "invalid");
         node_assert_1["default"].strictEqual(result.success, false);
         if (result.errors) {
@@ -404,9 +404,9 @@ node_test_1.describe("Error Structure", function () {
         }
     });
     node_test_1.test("error includes path", function () {
-        var schema = index_1.z.object({
-            user: index_1.z.object({
-                email: index_1.z.string().email()
+        var schema = index_1.r.object({
+            user: index_1.r.object({
+                email: index_1.r.string().email()
             })
         });
         var result = index_1.Validator.validate(schema, {
@@ -421,10 +421,10 @@ node_test_1.describe("Error Structure", function () {
 });
 node_test_1.describe("Performance", function () {
     node_test_1.test("validates quickly", function () {
-        var schema = index_1.z.object({
-            name: index_1.z.string(),
-            email: index_1.z.string().email(),
-            age: index_1.z.number().min(0).max(120)
+        var schema = index_1.r.object({
+            name: index_1.r.string(),
+            email: index_1.r.string().email(),
+            age: index_1.r.number().min(0).max(120)
         });
         var data = {
             name: "John Doe",

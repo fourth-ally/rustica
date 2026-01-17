@@ -165,8 +165,8 @@ UI displays error message
 
 ```
 Developer writes:
-  const schema = z.object({
-    email: z.string().email()
+  const schema = r.object({
+    email: r.string().email()
   });
 
     │

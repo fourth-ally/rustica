@@ -207,14 +207,4 @@ describe("Schema Builders", () => {
       assert.strictEqual((value as any).active, true);
     });
   });
-
-  describe("Backwards Compatibility", () => {
-    it("should support z alias", async () => {
-      const { z } = await import("../src/index.js");
-      const schema = z.string().min(5);
-      const json = schema.toJSON();
-      assert.strictEqual(json.type, "string");
-      assert.strictEqual(json.min, 5);
-    });
-  });
 });

@@ -165,7 +165,7 @@ A **production-grade Zod-like schema and form validation system** powered by Rus
 | Zod-like errors             | ✅     | {path, code, message} structure |
 | WASM bindings               | ✅     | wasm-bindgen integration        |
 | JSON-only interface         | ✅     | Single call per validation      |
-| TypeScript schema builders  | ✅     | z.string(), z.number(), etc.    |
+| TypeScript schema builders  | ✅     | r.string(), r.number(), etc.    |
 | Fluent API                  | ✅     | .min().max().email()            |
 | Type inference              | ✅     | Infer<T> utility                |
 | Form runtime                | ✅     | createForm()                    |

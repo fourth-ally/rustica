@@ -7,7 +7,7 @@ The Rust-JS Validator is built with a clean separation of concerns:
 ```
 ┌─────────────────────────────────────────┐
 │         TypeScript Layer                │
-│  - Schema Builder (z.string(), etc.)    │
+│  - Schema Builder (r.string(), etc.)    │
 │  - Form Runtime (createForm)            │
 │  - React Hooks (useWasmForm)            │
 └──────────────┬──────────────────────────┘
@@ -221,7 +221,7 @@ if (syncResult.success) {
 Use the `ui` metadata for form generation:
 
 ```typescript
-const schema = z.string().ui({
+const schema = r.string().ui({
   label: 'Email',
   placeholder: 'you@example.com',
   description: 'We will never share your email'
@@ -247,11 +247,11 @@ mod tests {
 
 ```typescript
 import { test } from 'node:test';
-import { z, Validator } from './src/index';
+import { r, Validator } from './src/index';
 
 test('validates email', async () => {
   await initWasm();
-  const schema = z.string().email();
+  const schema = r.string().email();
   const result = Validator.validate(schema, 'test@example.com');
   assert(result.success);
 });

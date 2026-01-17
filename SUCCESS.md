@@ -72,13 +72,13 @@ node --import tsx examples/standalone.ts  # Run standalone example
 ### Use in Your Code
 
 ```typescript
-import { z, Validator, initWasm } from "rustica";
+import { r, Validator, initWasm } from "rustica";
 
 await initWasm();
 
-const schema = z.object({
-  email: z.string().email(),
-  age: z.number().min(18),
+const schema = r.object({
+  email: r.string().email(),
+  age: r.number().min(18),
 });
 
 const result = Validator.validate(schema, {
@@ -127,7 +127,7 @@ rustica/
 │   ├── validator.rs  # Validation logic
 │   └── wasm.rs       # WASM bindings
 ├── src/              # TypeScript source
-│   ├── schema/       # Builders (z.string(), etc.)
+│   ├── schema/       # Builders (r.string(), etc.)
 │   ├── validator/    # WASM wrapper
 │   ├── form/         # Form runtime
 │   └── react/        # React hooks
@@ -231,7 +231,7 @@ Full documentation available in `docs/`:
 ```typescript
 z.string().min(5).max(100).email();
 z.number().min(0).max(100).integer();
-z.object({ name: z.string(), age: z.number() });
+z.object({ name: r.string(), age: r.number() });
 ```
 
 ### Validation ✓

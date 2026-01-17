@@ -4,7 +4,7 @@
 
 import { test, describe, before } from "node:test";
 import assert from "node:assert";
-import { z, Validator, initWasm, createForm, type Infer } from "../src/index";
+import { r, Validator, initWasm, createForm, type Infer } from "../src/index";
 
 // Initialize WASM before all tests
 before(async () => {
@@ -12,44 +12,44 @@ before(async () => {
 });
 
 describe("Schema Builders", () => {
-  test("z.string() creates string schema", () => {
-    const schema = z.string();
+  test("r.string() creates string schema", () => {
+    const schema = r.string();
     const json = schema.toJSON();
     assert.strictEqual(json.type, "string");
   });
 
-  test("z.string() with constraints", () => {
-    const schema = z.string().min(3).max(10).email();
+  test("r.string() with constraints", () => {
+    const schema = r.string().min(3).max(10).email();
     const json = schema.toJSON();
     assert.strictEqual(json.min, 3);
     assert.strictEqual(json.max, 10);
     assert.strictEqual(json.email, true);
   });
 
-  test("z.number() creates number schema", () => {
-    const schema = z.number();
+  test("r.number() creates number schema", () => {
+    const schema = r.number();
     const json = schema.toJSON();
     assert.strictEqual(json.type, "number");
   });
 
-  test("z.number() with constraints", () => {
-    const schema = z.number().min(0).max(100).integer();
+  test("r.number() with constraints", () => {
+    const schema = r.number().min(0).max(100).integer();
     const json = schema.toJSON();
     assert.strictEqual(json.min, 0);
     assert.strictEqual(json.max, 100);
     assert.strictEqual(json.integer, true);
   });
 
-  test("z.boolean() creates boolean schema", () => {
-    const schema = z.boolean();
+  test("r.boolean() creates boolean schema", () => {
+    const schema = r.boolean();
     const json = schema.toJSON();
     assert.strictEqual(json.type, "boolean");
   });
 
-  test("z.object() creates object schema", () => {
-    const schema = z.object({
-      name: z.string(),
-      age: z.number(),
+  test("r.object() creates object schema", () => {
+    const schema = r.object({
+      name: r.string(),
+      age: r.number(),
     });
     const json = schema.toJSON();
     assert.strictEqual(json.type, "object");
@@ -58,7 +58,7 @@ describe("Schema Builders", () => {
   });
 
   test("UI configuration", () => {
-    const schema = z
+    const schema = r
       .string()
       .ui({ label: "Email", placeholder: "test@example.com" });
     const json = schema.toJSON();
@@ -69,32 +69,32 @@ describe("Schema Builders", () => {
 
 describe("String Validation", () => {
   test("validates valid string", () => {
-    const schema = z.string();
+    const schema = r.string();
     const result = Validator.validate(schema, "hello");
     assert.strictEqual(result.success, true);
   });
 
   test("rejects non-string", () => {
-    const schema = z.string();
+    const schema = r.string();
     const result = Validator.validate(schema, 123);
     assert.strictEqual(result.success, false);
     assert(result.errors?.[0].code === "invalid_type");
   });
 
   test("validates min length", () => {
-    const schema = z.string().min(5);
+    const schema = r.string().min(5);
     assert.strictEqual(Validator.validate(schema, "hello").success, true);
     assert.strictEqual(Validator.validate(schema, "hi").success, false);
   });
 
   test("validates max length", () => {
-    const schema = z.string().max(5);
+    const schema = r.string().max(5);
     assert.strictEqual(Validator.validate(schema, "hello").success, true);
     assert.strictEqual(Validator.validate(schema, "toolong").success, false);
   });
 
   test("validates email", () => {
-    const schema = z.string().email();
+    const schema = r.string().email();
     assert.strictEqual(
       Validator.validate(schema, "test@example.com").success,
       true,
@@ -103,7 +103,7 @@ describe("String Validation", () => {
   });
 
   test("validates URL", () => {
-    const schema = z.string().url();
+    const schema = r.string().url();
     assert.strictEqual(
       Validator.validate(schema, "https://example.com").success,
       true,
@@ -114,37 +114,37 @@ describe("String Validation", () => {
 
 describe("Number Validation", () => {
   test("validates valid number", () => {
-    const schema = z.number();
+    const schema = r.number();
     const result = Validator.validate(schema, 42);
     assert.strictEqual(result.success, true);
   });
 
   test("rejects non-number", () => {
-    const schema = z.number();
+    const schema = r.number();
     const result = Validator.validate(schema, "not a number");
     assert.strictEqual(result.success, false);
   });
 
   test("validates min value", () => {
-    const schema = z.number().min(10);
+    const schema = r.number().min(10);
     assert.strictEqual(Validator.validate(schema, 15).success, true);
     assert.strictEqual(Validator.validate(schema, 5).success, false);
   });
 
   test("validates max value", () => {
-    const schema = z.number().max(100);
+    const schema = r.number().max(100);
     assert.strictEqual(Validator.validate(schema, 50).success, true);
     assert.strictEqual(Validator.validate(schema, 150).success, false);
   });
 
   test("validates integer", () => {
-    const schema = z.number().integer();
+    const schema = r.number().integer();
     assert.strictEqual(Validator.validate(schema, 42).success, true);
     assert.strictEqual(Validator.validate(schema, 42.5).success, false);
   });
 
   test("validates positive", () => {
-    const schema = z.number().positive();
+    const schema = r.number().positive();
     assert.strictEqual(Validator.validate(schema, 5).success, true);
     assert.strictEqual(Validator.validate(schema, -5).success, false);
     assert.strictEqual(Validator.validate(schema, 0).success, false);
@@ -153,13 +153,13 @@ describe("Number Validation", () => {
 
 describe("Boolean Validation", () => {
   test("validates valid boolean", () => {
-    const schema = z.boolean();
+    const schema = r.boolean();
     assert.strictEqual(Validator.validate(schema, true).success, true);
     assert.strictEqual(Validator.validate(schema, false).success, true);
   });
 
   test("rejects non-boolean", () => {
-    const schema = z.boolean();
+    const schema = r.boolean();
     assert.strictEqual(Validator.validate(schema, "true").success, false);
     assert.strictEqual(Validator.validate(schema, 1).success, false);
   });
@@ -167,27 +167,27 @@ describe("Boolean Validation", () => {
 
 describe("Object Validation", () => {
   test("validates valid object", () => {
-    const schema = z.object({
-      name: z.string(),
-      age: z.number(),
+    const schema = r.object({
+      name: r.string(),
+      age: r.number(),
     });
     const result = Validator.validate(schema, { name: "John", age: 30 });
     assert.strictEqual(result.success, true);
   });
 
   test("rejects invalid object", () => {
-    const schema = z.object({
-      name: z.string(),
-      age: z.number(),
+    const schema = r.object({
+      name: r.string(),
+      age: r.number(),
     });
     const result = Validator.validate(schema, { name: "John", age: "thirty" });
     assert.strictEqual(result.success, false);
   });
 
   test("requires all fields", () => {
-    const schema = z.object({
-      name: z.string(),
-      age: z.number(),
+    const schema = r.object({
+      name: r.string(),
+      age: r.number(),
     });
     const result = Validator.validate(schema, { name: "John" });
     assert.strictEqual(result.success, false);
@@ -195,10 +195,10 @@ describe("Object Validation", () => {
   });
 
   test("validates nested objects", () => {
-    const schema = z.object({
-      user: z.object({
-        name: z.string(),
-        email: z.string().email(),
+    const schema = r.object({
+      user: r.object({
+        name: r.string(),
+        email: r.string().email(),
       }),
     });
     const result = Validator.validate(schema, {
@@ -210,8 +210,8 @@ describe("Object Validation", () => {
 
 describe("Path Validation", () => {
   test("validates at specific path", () => {
-    const schema = z.object({
-      email: z.string().email(),
+    const schema = r.object({
+      email: r.string().email(),
     });
     const data = { email: "test@example.com" };
     const result = Validator.validateAtPath(schema, data, ["email"]);
@@ -219,8 +219,8 @@ describe("Path Validation", () => {
   });
 
   test("detects error at specific path", () => {
-    const schema = z.object({
-      email: z.string().email(),
+    const schema = r.object({
+      email: r.string().email(),
     });
     const data = { email: "invalid" };
     const result = Validator.validateAtPath(schema, data, ["email"]);
@@ -228,9 +228,9 @@ describe("Path Validation", () => {
   });
 
   test("validates nested path", () => {
-    const schema = z.object({
-      user: z.object({
-        email: z.string().email(),
+    const schema = r.object({
+      user: r.object({
+        email: r.string().email(),
       }),
     });
     const data = { user: { email: "test@example.com" } };
@@ -241,20 +241,20 @@ describe("Path Validation", () => {
 
 describe("Validator Methods", () => {
   test("parse() returns data on success", () => {
-    const schema = z.string();
+    const schema = r.string();
     const result = Validator.parse(schema, "hello");
     assert.strictEqual(result, "hello");
   });
 
   test("parse() throws on failure", () => {
-    const schema = z.string().email();
+    const schema = r.string().email();
     assert.throws(() => {
       Validator.parse(schema, "invalid");
     });
   });
 
   test("safeParse() returns success result", () => {
-    const schema = z.string();
+    const schema = r.string();
     const result = Validator.safeParse(schema, "hello");
     assert.strictEqual(result.success, true);
     if (result.success) {
@@ -263,7 +263,7 @@ describe("Validator Methods", () => {
   });
 
   test("safeParse() returns error result", () => {
-    const schema = z.string().email();
+    const schema = r.string().email();
     const result = Validator.safeParse(schema, "invalid");
     assert.strictEqual(result.success, false);
     if (!result.success) {
@@ -274,23 +274,23 @@ describe("Validator Methods", () => {
 
 describe("Type Inference", () => {
   test("infers string type", () => {
-    const schema = z.string();
+    const schema = r.string();
     type Inferred = Infer<typeof schema>;
     const value: Inferred = "test";
     assert.strictEqual(typeof value, "string");
   });
 
   test("infers number type", () => {
-    const schema = z.number();
+    const schema = r.number();
     type Inferred = Infer<typeof schema>;
     const value: Inferred = 42;
     assert.strictEqual(typeof value, "number");
   });
 
   test("infers object type", () => {
-    const schema = z.object({
-      name: z.string(),
-      age: z.number(),
+    const schema = r.object({
+      name: r.string(),
+      age: r.number(),
     });
     type Inferred = Infer<typeof schema>;
     const value: Inferred = { name: "John", age: 30 };
@@ -301,9 +301,9 @@ describe("Type Inference", () => {
 
 describe("Form Runtime", () => {
   test("creates form with default values", () => {
-    const schema = z.object({
-      name: z.string(),
-      email: z.string(),
+    const schema = r.object({
+      name: r.string(),
+      email: r.string(),
     });
     const form = createForm({
       schema,
@@ -315,7 +315,7 @@ describe("Form Runtime", () => {
   });
 
   test("sets field value", () => {
-    const schema = z.object({ name: z.string() });
+    const schema = r.object({ name: r.string() });
     const form = createForm({
       schema,
       defaultValues: { name: "" },
@@ -326,8 +326,8 @@ describe("Form Runtime", () => {
   });
 
   test("validates field on blur", () => {
-    const schema = z.object({
-      email: z.string().email(),
+    const schema = r.object({
+      email: r.string().email(),
     });
     const form = createForm({
       schema,
@@ -341,9 +341,9 @@ describe("Form Runtime", () => {
   });
 
   test("validates entire form", () => {
-    const schema = z.object({
-      name: z.string().min(2),
-      email: z.string().email(),
+    const schema = r.object({
+      name: r.string().min(2),
+      email: r.string().email(),
     });
     const form = createForm({
       schema,
@@ -357,7 +357,7 @@ describe("Form Runtime", () => {
 
   test("calls onSubmit with valid data", async () => {
     let submitted = false;
-    const schema = z.object({ name: z.string() });
+    const schema = r.object({ name: r.string() });
     const form = createForm({
       schema,
       defaultValues: { name: "John" },
@@ -372,7 +372,7 @@ describe("Form Runtime", () => {
 
   test("subscribes to form changes", () => {
     let notified = false;
-    const schema = z.object({ name: z.string() });
+    const schema = r.object({ name: r.string() });
     const form = createForm({
       schema,
       defaultValues: { name: "" },
@@ -389,7 +389,7 @@ describe("Form Runtime", () => {
 
 describe("Error Structure", () => {
   test("error has correct structure", () => {
-    const schema = z.string().email();
+    const schema = r.string().email();
     const result = Validator.validate(schema, "invalid");
     assert.strictEqual(result.success, false);
     if (result.errors) {
@@ -401,9 +401,9 @@ describe("Error Structure", () => {
   });
 
   test("error includes path", () => {
-    const schema = z.object({
-      user: z.object({
-        email: z.string().email(),
+    const schema = r.object({
+      user: r.object({
+        email: r.string().email(),
       }),
     });
     const result = Validator.validate(schema, {
@@ -419,10 +419,10 @@ describe("Error Structure", () => {
 
 describe("Performance", () => {
   test("validates quickly", () => {
-    const schema = z.object({
-      name: z.string(),
-      email: z.string().email(),
-      age: z.number().min(0).max(120),
+    const schema = r.object({
+      name: r.string(),
+      email: r.string().email(),
+      age: r.number().min(0).max(120),
     });
     const data = {
       name: "John Doe",

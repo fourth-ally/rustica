@@ -14,8 +14,6 @@ exports.__esModule = true;
 // Schema builder API
 var schema_1 = require("./schema");
 __createBinding(exports, schema_1, "r");
-__createBinding(exports, schema_1, "z");
-__createBinding(exports, schema_1, "n");
 __createBinding(exports, schema_1, "type");
 __createBinding(exports, schema_1, "type");
 var builders_1 = require("./schema/builders");

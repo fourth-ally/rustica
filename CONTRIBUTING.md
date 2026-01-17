@@ -129,11 +129,11 @@ cargo test
 
 ```typescript
 import { test } from "node:test";
-import { z, Validator, initWasm } from "../src/index";
+import { r, Validator, initWasm } from "../src/index";
 
 test("validates email", async () => {
   await initWasm();
-  const schema = z.string().email();
+  const schema = r.string().email();
   const result = Validator.validate(schema, "test@example.com");
   assert(result.success);
 });
@@ -253,7 +253,7 @@ rustica/
 4. **Export in API** (`src/schema/index.ts`)
 
    ```typescript
-   export const z = {
+   export const r = {
      // ... existing
      array<T>(items: SchemaBuilder<T>): ZArray<T> {
        return new ZArray(items);

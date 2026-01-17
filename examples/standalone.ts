@@ -1,4 +1,4 @@
-import { z, Validator, initWasm, type Infer } from "../src/index";
+import { r, Validator, initWasm, type Infer } from "../src/index";
 
 /**
  * Standalone validation examples (no React required)
@@ -11,7 +11,7 @@ console.log("=== Rust-JS Validator Examples ===\n");
 
 // Example 1: Simple string validation
 console.log("Example 1: String validation");
-const emailSchema = z.string().min(3).email();
+const emailSchema = r.string().min(3).email();
 
 const validEmail = Validator.safeParse(emailSchema, "test@example.com");
 console.log("Valid email:", validEmail);
@@ -22,7 +22,7 @@ console.log("");
 
 // Example 2: Number validation
 console.log("Example 2: Number validation");
-const ageSchema = z.number().min(0).max(120).integer();
+const ageSchema = r.number().min(0).max(120).integer();
 
 const validAge = Validator.safeParse(ageSchema, 25);
 console.log("Valid age:", validAge);
@@ -33,11 +33,11 @@ console.log("");
 
 // Example 3: Object validation
 console.log("Example 3: Object validation");
-const userSchema = z.object({
-  name: z.string().min(2),
-  email: z.string().email(),
-  age: z.number().min(18).integer(),
-  website: z.string().url(),
+const userSchema = r.object({
+  name: r.string().min(2),
+  email: r.string().email(),
+  age: r.number().min(18).integer(),
+  website: r.string().url(),
 });
 
 type User = Infer<typeof userSchema>;
@@ -96,13 +96,13 @@ console.log("");
 
 // Example 7: Complex nested schema
 console.log("Example 7: Complex validation rules");
-const complexSchema = z.object({
-  username: z.string().min(3).max(20),
-  email: z.string().min(5).email(),
-  profile: z.object({
-    bio: z.string().min(10).max(500),
-    age: z.number().min(13).max(120).integer(),
-    website: z.string().url(),
+const complexSchema = r.object({
+  username: r.string().min(3).max(20),
+  email: r.string().min(5).email(),
+  profile: r.object({
+    bio: r.string().min(10).max(500),
+    age: r.number().min(13).max(120).integer(),
+    website: r.string().url(),
   }),
 });
 
@@ -125,11 +125,11 @@ console.log("");
 
 // Example 8: Performance test
 console.log("Example 8: Performance test (1000 validations)");
-const perfSchema = z.object({
-  id: z.number().integer().positive(),
-  name: z.string().min(1).max(100),
-  email: z.string().email(),
-  active: z.boolean(),
+const perfSchema = r.object({
+  id: r.number().integer().positive(),
+  name: r.string().min(1).max(100),
+  email: r.string().email(),
+  active: r.boolean(),
 });
 
 const perfData = {

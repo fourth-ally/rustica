@@ -37,7 +37,7 @@ rustica/
 ├── src/                      # TypeScript source
 │   ├── schema/              # Schema builders
 │   │   ├── types.ts         # Type definitions
-│   │   ├── builders.ts      # z.string(), z.number(), etc.
+│   │   ├── builders.ts      # r.string(), r.number(), etc.
 │   │   └── index.ts         # Public API
 │   ├── validator/           # WASM wrapper
 │   │   └── index.ts         # Validator class
@@ -93,13 +93,13 @@ node --loader tsx examples/standalone.ts
 ### Usage
 
 ```typescript
-import { z, useWasmForm, initWasm } from 'rustica';
+import { r, useWasmForm, initWasm } from 'rustica';
 
 await initWasm();
 
-const schema = z.object({
-  email: z.string().email().ui({ label: 'Email' }),
-  password: z.string().min(8).ui({ label: 'Password' })
+const schema = r.object({
+  email: r.string().email().ui({ label: 'Email' }),
+  password: r.string().min(8).ui({ label: 'Password' })
 });
 
 function LoginForm() {

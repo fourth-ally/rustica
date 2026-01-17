@@ -5,7 +5,7 @@
  * Run with: node --loader tsx examples/quick-test.ts
  */
 
-import { z, Validator, initWasm } from '../src/index.js';
+import { r, Validator, initWasm } from '../src/index.js';
 
 async function runTests() {
   console.log('Initializing WASM...');
@@ -14,7 +14,7 @@ async function runTests() {
 
   // Test 1: Basic string validation
   console.log('Test 1: String validation');
-  const stringSchema = z.string().min(5);
+  const stringSchema = r.string().min(5);
   
   const test1a = Validator.validate(stringSchema, 'hello');
   console.log('  "hello" (min 5):', test1a.success ? '✓ PASS' : '✗ FAIL');
@@ -24,7 +24,7 @@ async function runTests() {
 
   // Test 2: Email validation
   console.log('\nTest 2: Email validation');
-  const emailSchema = z.string().email();
+  const emailSchema = r.string().email();
   
   const test2a = Validator.validate(emailSchema, 'test@example.com');
   console.log('  "test@example.com":', test2a.success ? '✓ PASS' : '✗ FAIL');
@@ -34,7 +34,7 @@ async function runTests() {
 
   // Test 3: Number validation
   console.log('\nTest 3: Number validation');
-  const numberSchema = z.number().min(0).max(100);
+  const numberSchema = r.number().min(0).max(100);
   
   const test3a = Validator.validate(numberSchema, 50);
   console.log('  50 (0-100):', test3a.success ? '✓ PASS' : '✗ FAIL');
@@ -44,9 +44,9 @@ async function runTests() {
 
   // Test 4: Object validation
   console.log('\nTest 4: Object validation');
-  const userSchema = z.object({
-    name: z.string().min(2),
-    age: z.number().min(0).integer()
+  const userSchema = r.object({
+    name: r.string().min(2),
+    age: r.number().min(0).integer()
   });
   
   const test4a = Validator.validate(userSchema, { name: 'John', age: 30 });
