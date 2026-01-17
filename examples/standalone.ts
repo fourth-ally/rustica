@@ -116,7 +116,7 @@ const complexData = {
   },
 };
 
-const complexResult = Validator.safeParse(complexSchema, complexData);
+const complexResult = await Validator.safeParse(complexSchema, complexData);
 console.log("Complex validation:", complexResult.success ? "PASSED" : "FAILED");
 if (!complexResult.success) {
   console.log("Errors:", complexResult.errors);
