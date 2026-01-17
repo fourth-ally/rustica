@@ -67,10 +67,22 @@ npm install rustica
 ```typescript
 import { r, useWasmForm } from 'rustica';
 
-// Define schema
+// Define schema with optional custom error messages
 const loginSchema = r.object({
-  email: r.string().min(3).email().ui({ label: "Email" }),
-  password: r.string().min(8).ui({ label: "Password" })
+  email: r.string()
+    .min(3)
+    .email()
+    .ui({ label: "Email" })
+    .messages({
+      email: "Please enter a valid email address",
+      min: "Email must be at least 3 characters"
+    }),
+  password: r.string()
+    .min(8)
+    .ui({ label: "Password" })
+    .messages({
+      min: "Password must be at least 8 characters for security"
+    })
 });
 
 // Infer types
@@ -99,6 +111,50 @@ function LoginForm() {
   );
 }
 ```
+
+## Custom Error Messages (Optional)
+
+Customize validation error messages for better UX:
+
+```typescript
+// String validation with custom messages
+const usernameSchema = r.string().min(3).max(20).messages({
+  invalid_type: "Username must be text",
+  min: "Username is too short - minimum 3 characters",
+  max: "Username is too long - maximum 20 characters",
+});
+
+// Number validation with custom messages
+const ageSchema = r.number().min(18).integer().messages({
+  invalid_type: "Age must be a number",
+  min: "You must be at least 18 years old",
+  integer: "Age must be a whole number",
+});
+
+// Object validation with custom messages
+const formSchema = r
+  .object({
+    email: r.string().email().messages({
+      email: "Please enter a valid email like user@example.com",
+    }),
+    terms: r.boolean().messages({
+      invalid_type: "You must accept the terms and conditions",
+    }),
+  })
+  .messages({
+    invalid_type: "Form data must be an object",
+    required: "This field is required",
+  });
+```
+
+**Available message keys by type:**
+
+- **String**: `invalid_type`, `min`, `max`, `email`, `url`, `pattern`
+- **Number**: `invalid_type`, `min`, `max`, `integer`, `positive`
+- **Boolean**: `invalid_type`
+- **Object**: `invalid_type`, `required`
+
+If not provided, default messages are used. See [examples/custom-messages.ts](./examples/custom-messages.ts) for more examples.
 
 ## Building from Source
 
@@ -213,6 +269,7 @@ We welcome contributions! See [CONTRIBUTING.md](./CONTRIBUTING.md) for guideline
 - [x] React hooks
 - [x] Form runtime
 - [x] Type inference
+- [x] Custom error messages (optional)
 - [ ] Array/tuple schemas
 - [ ] Union/intersection types
 - [ ] Async validation helpers

@@ -18,6 +18,8 @@ pub enum Schema {
         pattern: Option<String>,
         #[serde(skip_serializing_if = "Option::is_none")]
         ui: Option<UiConfig>,
+        #[serde(skip_serializing_if = "Option::is_none")]
+        messages: Option<StringMessages>,
     },
     Number {
         #[serde(skip_serializing_if = "Option::is_none")]
@@ -30,16 +32,70 @@ pub enum Schema {
         positive: Option<bool>,
         #[serde(skip_serializing_if = "Option::is_none")]
         ui: Option<UiConfig>,
+        #[serde(skip_serializing_if = "Option::is_none")]
+        messages: Option<NumberMessages>,
     },
     Boolean {
         #[serde(skip_serializing_if = "Option::is_none")]
         ui: Option<UiConfig>,
+        #[serde(skip_serializing_if = "Option::is_none")]
+        messages: Option<BooleanMessages>,
     },
     Object {
         shape: HashMap<String, Schema>,
         #[serde(skip_serializing_if = "Option::is_none")]
         ui: Option<UiConfig>,
+        #[serde(skip_serializing_if = "Option::is_none")]
+        messages: Option<ObjectMessages>,
     },
+}
+
+/// Custom error messages for string validation
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct StringMessages {
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub invalid_type: Option<String>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub min: Option<String>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub max: Option<String>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub email: Option<String>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub url: Option<String>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub pattern: Option<String>,
+}
+
+/// Custom error messages for number validation
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct NumberMessages {
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub invalid_type: Option<String>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub min: Option<String>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub max: Option<String>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub integer: Option<String>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub positive: Option<String>,
+}
+
+/// Custom error messages for boolean validation
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct BooleanMessages {
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub invalid_type: Option<String>,
+}
+
+/// Custom error messages for object validation
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct ObjectMessages {
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub invalid_type: Option<String>,
+    #[serde(skip_serializing_if = "Option::is_none")]
+    pub required: Option<String>,
 }
 
 /// UI configuration for forms

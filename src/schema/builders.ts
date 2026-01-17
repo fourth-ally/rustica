@@ -1,4 +1,14 @@
-import type { StringSchema, NumberSchema, BooleanSchema, ObjectSchema, UiConfig } from './types';
+import type {
+  StringSchema,
+  NumberSchema,
+  BooleanSchema,
+  ObjectSchema,
+  UiConfig,
+  StringMessages,
+  NumberMessages,
+  BooleanMessages,
+  ObjectMessages,
+} from "./types";
 
 /**
  * Base class for all schema builders
@@ -20,7 +30,7 @@ export class ZString extends SchemaBuilder<string> {
 
   constructor() {
     super();
-    this.schema = { type: 'string' };
+    this.schema = { type: "string" };
   }
 
   /**
@@ -72,6 +82,14 @@ export class ZString extends SchemaBuilder<string> {
   }
 
   /**
+   * Add custom error messages
+   */
+  messages(messages: StringMessages): this {
+    this.schema.messages = messages;
+    return this;
+  }
+
+  /**
    * Serialize to JSON for Rust validation
    */
   toJSON(): StringSchema {
@@ -87,7 +105,7 @@ export class ZNumber extends SchemaBuilder<number> {
 
   constructor() {
     super();
-    this.schema = { type: 'number' };
+    this.schema = { type: "number" };
   }
 
   /**
@@ -131,6 +149,14 @@ export class ZNumber extends SchemaBuilder<number> {
   }
 
   /**
+   * Add custom error messages
+   */
+  messages(messages: NumberMessages): this {
+    this.schema.messages = messages;
+    return this;
+  }
+
+  /**
    * Serialize to JSON for Rust validation
    */
   toJSON(): NumberSchema {
@@ -146,7 +172,7 @@ export class ZBoolean extends SchemaBuilder<boolean> {
 
   constructor() {
     super();
-    this.schema = { type: 'boolean' };
+    this.schema = { type: "boolean" };
   }
 
   /**
@@ -154,6 +180,14 @@ export class ZBoolean extends SchemaBuilder<boolean> {
    */
   ui(config: UiConfig): this {
     this.schema.ui = config;
+    return this;
+  }
+
+  /**
+   * Add custom error messages
+   */
+  messages(messages: BooleanMessages): this {
+    this.schema.messages = messages;
     return this;
   }
 
@@ -168,22 +202,24 @@ export class ZBoolean extends SchemaBuilder<boolean> {
 /**
  * Object schema builder with fluent API
  */
-export class ZObject<T extends Record<string, SchemaBuilder<any>>> extends SchemaBuilder<
-  { [K in keyof T]: T[K] extends SchemaBuilder<infer U> ? U : never }
-> {
+export class ZObject<
+  T extends Record<string, SchemaBuilder<any>>,
+> extends SchemaBuilder<{
+  [K in keyof T]: T[K] extends SchemaBuilder<infer U> ? U : never;
+}> {
   private schema: ObjectSchema;
 
   constructor(shape: T) {
     super();
-    
+
     // Convert SchemaBuilder instances to their JSON representation
     const jsonShape: Record<string, any> = {};
     for (const [key, value] of Object.entries(shape)) {
       jsonShape[key] = value.toJSON();
     }
-    
+
     this.schema = {
-      type: 'object',
+      type: "object",
       shape: jsonShape,
     };
   }
@@ -193,6 +229,14 @@ export class ZObject<T extends Record<string, SchemaBuilder<any>>> extends Schem
    */
   ui(config: UiConfig): this {
     this.schema.ui = config;
+    return this;
+  }
+
+  /**
+   * Add custom error messages
+   */
+  messages(messages: ObjectMessages): this {
+    this.schema.messages = messages;
     return this;
   }
 
