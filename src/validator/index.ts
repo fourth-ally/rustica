@@ -39,13 +39,26 @@ export async function initWasm(): Promise<void> {
       // Dynamic import of WASM module
       const module = (await import("../../pkg/rustica.js")) as any;
 
-      // For web target, call init function. For nodejs target, it's already loaded
+      console.log("WASM module loaded:", module);
+      console.log("Has WasmValidator?", !!module.WasmValidator);
+      console.log("Has default?", typeof module.default);
+
+      // For bundler/web target with async init, call default function
       if (typeof module.default === "function") {
         await module.default();
       }
 
+      // Always set wasmModule to the imported module (it has WasmValidator)
       wasmModule = module;
+
+      // Verify WasmValidator is accessible
+      if (!module.WasmValidator) {
+        throw new Error("WasmValidator not found in WASM module");
+      }
+
+      console.log("WASM initialization complete");
     } catch (error) {
+      console.error("WASM initialization failed:", error);
       wasmInitPromise = null; // Reset on error so it can be retried
       throw new Error(
         `Failed to load WASM module. Make sure to run 'npm run build:wasm' first. Error: ${error}`,
@@ -60,10 +73,24 @@ export async function initWasm(): Promise<void> {
  * Get initialized WASM module (auto-initializes if needed)
  */
 async function getWasm(): Promise<WasmModule> {
+  // If initialization is in progress, wait for it
+  if (wasmInitPromise && !wasmModule) {
+    await wasmInitPromise;
+  }
+
+  // If not initialized at all, start initialization
   if (!wasmModule) {
     await initWasm();
   }
-  return wasmModule!;
+
+  // Final check
+  if (!wasmModule) {
+    throw new Error(
+      "WASM module not initialized. Call initWasm() before validation.",
+    );
+  }
+
+  return wasmModule;
 }
 
 /**

@@ -16,7 +16,7 @@
     "build": "npm run build:wasm && npm run build:ts",
     "dev": "tsc --watch",
     "test": "cargo test && npm run test:ts",
-    "test:ts": "npm run build:wasm:node && node --import tsx --test tests/*.test.ts"
+    "test:ts": "npm run build:wasm:node && node --import tsx --test tests/*.test.ts && npm run build:wasm"
   },
   "keywords": [
     "validation",

@@ -76,16 +76,26 @@ function initWasm() {
                             return [4 /*yield*/, Promise.resolve().then(function () { return require("../../pkg/rustica.js"); })];
                         case 1:
                             module = (_a.sent());
+                            console.log("WASM module loaded:", module);
+                            console.log("Has WasmValidator?", !!module.WasmValidator);
+                            console.log("Has default?", typeof module["default"]);
                             if (!(typeof module["default"] === "function")) return [3 /*break*/, 3];
                             return [4 /*yield*/, module["default"]()];
                         case 2:
                             _a.sent();
                             _a.label = 3;
                         case 3:
+                            // Always set wasmModule to the imported module (it has WasmValidator)
                             wasmModule = module;
+                            // Verify WasmValidator is accessible
+                            if (!module.WasmValidator) {
+                                throw new Error("WasmValidator not found in WASM module");
+                            }
+                            console.log("WASM initialization complete");
                             return [3 /*break*/, 5];
                         case 4:
                             error_1 = _a.sent();
+                            console.error("WASM initialization failed:", error_1);
                             wasmInitPromise = null; // Reset on error so it can be retried
                             throw new Error("Failed to load WASM module. Make sure to run 'npm run build:wasm' first. Error: " + error_1);
                         case 5: return [2 /*return*/];
@@ -105,12 +115,23 @@ function getWasm() {
         return __generator(this, function (_a) {
             switch (_a.label) {
                 case 0:
-                    if (!!wasmModule) return [3 /*break*/, 2];
-                    return [4 /*yield*/, initWasm()];
+                    if (!(wasmInitPromise && !wasmModule)) return [3 /*break*/, 2];
+                    return [4 /*yield*/, wasmInitPromise];
                 case 1:
                     _a.sent();
                     _a.label = 2;
-                case 2: return [2 /*return*/, wasmModule];
+                case 2:
+                    if (!!wasmModule) return [3 /*break*/, 4];
+                    return [4 /*yield*/, initWasm()];
+                case 3:
+                    _a.sent();
+                    _a.label = 4;
+                case 4:
+                    // Final check
+                    if (!wasmModule) {
+                        throw new Error("WASM module not initialized. Call initWasm() before validation.");
+                    }
+                    return [2 /*return*/, wasmModule];
             }
         });
     });
