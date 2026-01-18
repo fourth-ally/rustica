@@ -5,9 +5,28 @@
   "type": "module",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    },
+    "./pkg/*": "./pkg/*"
+  },
+  "author": "fourth-ally",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/fourth-ally/rustica.git"
+  },
+  "bugs": {
+    "url": "https://github.com/fourth-ally/rustica/issues"
+  },
+  "homepage": "https://github.com/fourth-ally/rustica#readme",
   "files": [
     "dist",
-    "pkg"
+    "pkg",
+    "README.md",
+    "LICENSE"
   ],
   "scripts": {
     "build:wasm": "wasm-pack build --target bundler --out-dir pkg",
@@ -16,7 +35,8 @@
     "build": "npm run build:wasm && npm run build:ts",
     "dev": "tsc --watch",
     "test": "cargo test && npm run test:ts",
-    "test:ts": "npm run build:wasm:node && node --import tsx --test tests/*.test.ts && npm run build:wasm"
+    "test:ts": "npm run build:wasm:node && node --import tsx --test tests/*.test.ts && npm run build:wasm",
+    "prepublishOnly": "npm run build && npm test"
   },
   "keywords": [
     "validation",
@@ -24,7 +44,11 @@
     "wasm",
     "rust",
     "zod",
-    "forms"
+    "forms",
+    "react",
+    "typescript",
+    "webassembly",
+    "form-validation"
   ],
   "devDependencies": {
     "@types/node": "^25.0.9",
@@ -40,5 +64,8 @@
     "react": {
       "optional": true
     }
+  },
+  "engines": {
+    "node": ">=18.0.0"
   }
 }

@@ -37,7 +37,8 @@ export async function initWasm(): Promise<void> {
   wasmInitPromise = (async () => {
     try {
       // Dynamic import of WASM module
-      const module = (await import("../../pkg/rustica.js")) as any;
+      // Use package-relative path that works both in development and when installed
+      const module = (await import("rustica/pkg/rustica.js")) as any;
 
       console.log("WASM module loaded:", module);
       console.log("Has WasmValidator?", !!module.WasmValidator);

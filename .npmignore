@@ -1,0 +1,43 @@
+# Source files
+src/
+tests/
+examples/
+docs/
+scripts/
+assets/
+
+# Rust
+/target/
+Cargo.toml
+Cargo.lock
+
+# Build configs
+tsconfig.json
+.vscode/
+.idea/
+Makefile
+
+# Git
+.git/
+.gitignore
+
+# Documentation (except README)
+CHANGELOG.md
+CONTRIBUTING.md
+DELIVERY.md
+INDEX.md
+PROJECT_SUMMARY.md
+QUICK_REFERENCE.md
+STATS.md
+SUCCESS.md
+
+# OS
+.DS_Store
+*.swp
+*.swo
+
+# Keep these
+!dist/
+!pkg/
+!README.md
+!LICENSE
