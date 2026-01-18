@@ -220,7 +220,7 @@ Why: Overkill for simple forms
 ```typescript
 // Zod
 import { z } from "zod";
-const schema = r.object({
+const schema = z.object({
   email: r.string().email(),
 });
 
