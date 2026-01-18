@@ -67,12 +67,14 @@ type User = r.Infer<typeof userSchema>;
 
 ## Validator
 
-### `Validator.validate(schema, value)`
+**Note:** All Validator methods are async and return Promises.
+
+### `await Validator.validate(schema, value)`
 
 Validate data against a schema.
 
 ```typescript
-const result = Validator.validate(schema, data);
+const result = await Validator.validate(schema, data);
 
 if (result.success) {
   console.log("Valid!");
@@ -81,37 +83,37 @@ if (result.success) {
 }
 ```
 
-### `Validator.validateAtPath(schema, value, path)`
+### `await Validator.validateAtPath(schema, value, path)`
 
 Validate a specific field in an object.
 
 ```typescript
-const result = Validator.validateAtPath(
+const result = await Validator.validateAtPath(
   userSchema,
   { name: "John", email: "invalid" },
   ["email"],
 );
 ```
 
-### `Validator.parse(schema, value)`
+### `await Validator.parse(schema, value)`
 
 Validate and throw on error.
 
 ```typescript
 try {
-  const user = Validator.parse(userSchema, data);
+  const user = await Validator.parse(userSchema, data);
   // user is typed correctly
 } catch (error) {
   console.error(error.message);
 }
 ```
 
-### `Validator.safeParse(schema, value)`
+### `await Validator.safeParse(schema, value)`
 
 Validate and return result object.
 
 ```typescript
-const result = Validator.safeParse(userSchema, data);
+const result = await Validator.safeParse(userSchema, data);
 
 if (result.success) {
   const user = result.data; // Typed correctly

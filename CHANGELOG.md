@@ -18,6 +18,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Object validation with nested schemas
 - Path-based validation for field-level checks
 - Zod-like error structure with path, code, and message
+- **Custom error messages** for all validator types (String, Number, Boolean, Object)
 
 #### WASM Interface
 
@@ -25,14 +26,15 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - `validate_at_path(schema_json, value_json, path_json)` - Field validation
 - JSON-only interface for zero-copy performance
 - wasm-bindgen integration
+- **Auto-initialization** - WASM loads lazily on first validation call (no manual setup needed)
 
 #### TypeScript Schema Builder
 
 - Fluent API with method chaining
-- `r.string()` - String schema builder
-- `r.number()` - Number schema builder
-- `r.boolean()` - Boolean schema builder
-- `r.object()` - Object schema builder
+- `r.string()` - String schema builder with optional `.messages()` customization
+- `r.number()` - Number schema builder with optional `.messages()` customization
+- `r.boolean()` - Boolean schema builder with optional `.messages()` customization
+- `r.object()` - Object schema builder with optional `.messages()` customization
 - UI metadata support with `.ui()` method
 - Full JSON serialization with `.toJSON()`
 
@@ -42,14 +44,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Full TypeScript type safety
 - Compile-time type checking
 
-#### Validator API
+#### Validator API (All methods are async)
 
-- `Validator.validate()` - Standard validation
-- `Validator.validateAtPath()` - Field-level validation
-- `Validator.parse()` - Parse and throw on error
-- `Validator.safeParse()` - Parse and return result
-- `initWasm()` - WASM initialization
-- `createValidator()` - Auto-initializing wrapper
+- `await Validator.validate()` - Standard validation
+- `await Validator.validateAtPath()` - Field-level validation
+- `await Validator.parse()` - Parse and throw on error
+- `await Validator.safeParse()` - Parse and return result
+- `initWasm()` - Optional manual WASM initialization (for eager loading)
 
 #### Form Runtime
 
@@ -124,8 +125,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 - Array/tuple schemas
 - Union/intersection types
 - Conditional validation
-- Custom error messages
-- i18n support
+- i18n support for error messages
 - Schema composition utilities
 - Async validation helpers
 - Form field arrays

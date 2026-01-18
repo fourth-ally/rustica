@@ -21,14 +21,9 @@ cd examples/react-form-app
 npm install
 ```
 
-### 2. Build the Parent Validator Package
+The `rustica` package will be installed from npm.
 
-```bash
-cd ../..
-make build
-```
-
-### 3. Run the Development Server
+### 2. Run the Development Server
 
 ```bash
 cd examples/react-form-app
@@ -81,8 +76,8 @@ react-form-app/
 
 ## How It Works
 
-1. **WASM Initialization**: The app initializes the Rust WASM validator on startup
-2. **Schema Definition**: Form validation rules are defined using the `z` schema builder
+1. **Auto-Initialization**: WASM loads automatically on first validation - no manual setup needed!
+2. **Schema Definition**: Form validation rules are defined using the `r` schema builder
 3. **React Hook**: `useWasmForm` manages form state and validation
 4. **Real-time Validation**: Fields are validated as you type using Rust
 5. **API Submission**: Valid data is posted to external API

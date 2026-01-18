@@ -30,19 +30,11 @@ npm run build
 
 ## Quick Start
 
-### 1. Initialize WASM
+### 1. Define a Schema
 
-Before using the validator, initialize the WASM module:
+Use the `r` builder to define validation schemas.
 
-```typescript
-import { initWasm } from 'rustica';
-
-await initWasm();
-```
-
-### 2. Define a Schema
-
-Use the `z` builder to define validation schemas:
+**Note:** WASM auto-initializes on first validation - no manual setup needed!
 
 ```typescript
 import { r } from 'rustica';
@@ -54,14 +46,14 @@ const userSchema = r.object({
 });
 ```
 
-### 3. Validate Data
+### 2. Validate Data
 
-Use the `Validator` to check your data:
+Use the `Validator` to check your data. All validation methods are async:
 
 ```typescript
 import { Validator } from 'rustica';
 
-const result = Validator.validate(userSchema, {
+const result = await Validator.validate(userSchema, {
   name: 'John Doe',
   email: 'john@example.com',
   age: 30
@@ -74,7 +66,7 @@ if (result.success) {
 }
 ```
 
-### 4. Type-Safe Forms
+### 3. Type-Safe Forms
 
 Get full TypeScript type inference:
 
@@ -95,10 +87,9 @@ type LoginData = Infer<typeof schema>;
 ### Basic Form
 
 ```typescript
-import { r, useWasmForm, initWasm } from 'rustica';
+import { r, useWasmForm } from 'rustica';
 
-// Initialize once at app startup
-await initWasm();
+// No initialization needed - WASM loads automatically on first validation!
 
 const loginSchema = r.object({
   email: r.string().email(),

@@ -7,8 +7,8 @@ npm install rustica
 ```
 
 ```typescript
-import { initWasm } from "rustica";
-await initWasm(); // Call once at app startup
+import { r, Validator } from "rustica";
+// No initialization needed - WASM auto-loads on first validation!
 ```
 
 ## 📝 Schema Definition
@@ -43,20 +43,20 @@ r.object({
 ```typescript
 import { Validator } from "rustica";
 
-// Standard validation
-const result = Validator.validate(schema, data);
+// Standard validation (async)
+const result = await Validator.validate(schema, data);
 if (result.success) {
   /* valid */
 }
 
 // Field-level validation
-const result = Validator.validateAtPath(schema, data, ["email"]);
+const result = await Validator.validateAtPath(schema, data, ["email"]);
 
 // Parse (throws on error)
-const data = Validator.parse(schema, input);
+const data = await Validator.parse(schema, input);
 
 // Safe parse (returns result)
-const result = Validator.safeParse(schema, input);
+const result = await Validator.safeParse(schema, input);
 if (result.success) {
   console.log(result.data);
 } else {
