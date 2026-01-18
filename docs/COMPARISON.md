@@ -2,52 +2,52 @@
 
 ## Feature Comparison
 
-| Feature                  | rustica | Zod     | Yup   | Joi    | Valibot |
-| ------------------------ | ----------------- | ------- | ----- | ------ | ------- |
+| Feature                  | rustica     | Zod     | Yup   | Joi    | Valibot |
+| ------------------------ | ----------- | ------- | ----- | ------ | ------- |
 | **Performance**          |
-| Validation Speed         | ⚡⚡⚡ WASM       | ⚡⚡ JS | ⚡ JS | ⚡ JS  | ⚡⚡ JS |
-| Bundle Size (min+gz)     | ~20KB             | ~12KB   | ~15KB | ~145KB | ~1KB    |
-| Zero-copy validation     | ✅                | ❌      | ❌    | ❌     | ❌      |
+| Validation Speed         | ⚡⚡⚡ WASM | ⚡⚡ JS | ⚡ JS | ⚡ JS  | ⚡⚡ JS |
+| Bundle Size (min+gz)     | ~20KB       | ~12KB   | ~15KB | ~145KB | ~1KB    |
+| Zero-copy validation     | ✅          | ❌      | ❌    | ❌     | ❌      |
 | **Schema Definition**    |
-| Fluent API               | ✅                | ✅      | ✅    | ✅     | ✅      |
-| Type Inference           | ✅                | ✅      | ✅    | ✅     | ✅      |
-| Schema Composition       | ✅                | ✅      | ✅    | ✅     | ✅      |
-| JSON Serialization       | ✅                | ❌      | ❌    | ❌     | ❌      |
+| Fluent API               | ✅          | ✅      | ✅    | ✅     | ✅      |
+| Type Inference           | ✅          | ✅      | ✅    | ✅     | ✅      |
+| Schema Composition       | ✅          | ✅      | ✅    | ✅     | ✅      |
+| JSON Serialization       | ✅          | ❌      | ❌    | ❌     | ❌      |
 | **Validation Types**     |
-| String                   | ✅                | ✅      | ✅    | ✅     | ✅      |
-| Number                   | ✅                | ✅      | ✅    | ✅     | ✅      |
-| Boolean                  | ✅                | ✅      | ✅    | ✅     | ✅      |
-| Object                   | ✅                | ✅      | ✅    | ✅     | ✅      |
-| Array                    | 🚧 Planned        | ✅      | ✅    | ✅     | ✅      |
-| Union                    | 🚧 Planned        | ✅      | ✅    | ✅     | ✅      |
-| Tuple                    | 🚧 Planned        | ✅      | ✅    | ✅     | ✅      |
-| Enum                     | 🚧 Planned        | ✅      | ✅    | ✅     | ✅      |
+| String                   | ✅          | ✅      | ✅    | ✅     | ✅      |
+| Number                   | ✅          | ✅      | ✅    | ✅     | ✅      |
+| Boolean                  | ✅          | ✅      | ✅    | ✅     | ✅      |
+| Object                   | ✅          | ✅      | ✅    | ✅     | ✅      |
+| Array                    | 🚧 Planned  | ✅      | ✅    | ✅     | ✅      |
+| Union                    | 🚧 Planned  | ✅      | ✅    | ✅     | ✅      |
+| Tuple                    | 🚧 Planned  | ✅      | ✅    | ✅     | ✅      |
+| Enum                     | 🚧 Planned  | ✅      | ✅    | ✅     | ✅      |
 | **String Validation**    |
-| Min/Max Length           | ✅                | ✅      | ✅    | ✅     | ✅      |
-| Email                    | ✅                | ✅      | ✅    | ✅     | ✅      |
-| URL                      | ✅                | ✅      | ✅    | ✅     | ✅      |
-| Regex                    | ✅                | ✅      | ✅    | ✅     | ✅      |
-| UUID                     | 🚧 Planned        | ✅      | ✅    | ✅     | ✅      |
+| Min/Max Length           | ✅          | ✅      | ✅    | ✅     | ✅      |
+| Email                    | ✅          | ✅      | ✅    | ✅     | ✅      |
+| URL                      | ✅          | ✅      | ✅    | ✅     | ✅      |
+| Regex                    | ✅          | ✅      | ✅    | ✅     | ✅      |
+| UUID                     | 🚧 Planned  | ✅      | ✅    | ✅     | ✅      |
 | **Number Validation**    |
-| Min/Max                  | ✅                | ✅      | ✅    | ✅     | ✅      |
-| Integer                  | ✅                | ✅      | ✅    | ✅     | ✅      |
-| Positive/Negative        | ✅                | ✅      | ✅    | ✅     | ✅      |
+| Min/Max                  | ✅          | ✅      | ✅    | ✅     | ✅      |
+| Integer                  | ✅          | ✅      | ✅    | ✅     | ✅      |
+| Positive/Negative        | ✅          | ✅      | ✅    | ✅     | ✅      |
 | **Form Integration**     |
-| React Hook               | ✅                | ❌      | ❌    | ❌     | ❌      |
-| Field-level validation   | ✅                | ✅      | ✅    | ✅     | ✅      |
-| Async validation         | 🚧 JS only        | ✅      | ✅    | ✅     | ✅      |
-| Error formatting         | ✅                | ✅      | ✅    | ✅     | ✅      |
-| UI metadata              | ✅                | ❌      | ❌    | ❌     | ❌      |
+| React Hook               | ✅          | ❌      | ❌    | ❌     | ❌      |
+| Field-level validation   | ✅          | ✅      | ✅    | ✅     | ✅      |
+| Async validation         | 🚧 JS only  | ✅      | ✅    | ✅     | ✅      |
+| Error formatting         | ✅          | ✅      | ✅    | ✅     | ✅      |
+| UI metadata              | ✅          | ❌      | ❌    | ❌     | ❌      |
 | **Developer Experience** |
-| TypeScript               | ✅                | ✅      | ✅    | ✅     | ✅      |
-| Error messages           | ✅                | ✅      | ✅    | ✅     | ✅      |
-| Documentation            | ✅                | ✅      | ✅    | ✅     | ✅      |
-| Examples                 | ✅                | ✅      | ✅    | ✅     | ✅      |
+| TypeScript               | ✅          | ✅      | ✅    | ✅     | ✅      |
+| Error messages           | ✅          | ✅      | ✅    | ✅     | ✅      |
+| Documentation            | ✅          | ✅      | ✅    | ✅     | ✅      |
+| Examples                 | ✅          | ✅      | ✅    | ✅     | ✅      |
 | **Platform Support**     |
-| Browser                  | ✅                | ✅      | ✅    | ✅     | ✅      |
-| Node.js                  | ✅                | ✅      | ✅    | ✅     | ✅      |
-| Deno                     | ✅                | ✅      | ✅    | ❌     | ✅      |
-| React Native             | ⚠️ Untested       | ✅      | ✅    | ✅     | ✅      |
+| Browser                  | ✅          | ✅      | ✅    | ✅     | ✅      |
+| Node.js                  | ✅          | ✅      | ✅    | ✅     | ✅      |
+| Deno                     | ✅          | ✅      | ✅    | ❌     | ✅      |
+| React Native             | ⚠️ Untested | ✅      | ✅    | ✅     | ✅      |
 
 **Legend:**
 
@@ -61,12 +61,12 @@
 ### Validation Speed (operations/second)
 
 | Test Case         | rustica | Zod     | Yup     | Joi     |
-| ----------------- | ----------------- | ------- | ------- | ------- |
-| Simple string     | ~10,000           | ~50,000 | ~30,000 | ~20,000 |
-| Email validation  | ~10,000           | ~40,000 | ~25,000 | ~15,000 |
-| Number range      | ~15,000           | ~60,000 | ~35,000 | ~25,000 |
-| Object (5 fields) | ~5,000            | ~20,000 | ~12,000 | ~8,000  |
-| Nested object     | ~3,000            | ~10,000 | ~6,000  | ~4,000  |
+| ----------------- | ------- | ------- | ------- | ------- |
+| Simple string     | ~10,000 | ~50,000 | ~30,000 | ~20,000 |
+| Email validation  | ~10,000 | ~40,000 | ~25,000 | ~15,000 |
+| Number range      | ~15,000 | ~60,000 | ~35,000 | ~25,000 |
+| Object (5 fields) | ~5,000  | ~20,000 | ~12,000 | ~8,000  |
+| Nested object     | ~3,000  | ~10,000 | ~6,000  | ~4,000  |
 
 **Note:** These are approximate values. Actual performance depends on:
 
@@ -77,13 +77,13 @@
 
 ### Bundle Size Impact
 
-| Library           | Core Size | With Forms   | Gzipped |
-| ----------------- | --------- | ------------ | ------- |
+| Library | Core Size | With Forms   | Gzipped |
+| ------- | --------- | ------------ | ------- |
 | rustica | 15-20KB   | 25-30KB      | 8-10KB  |
-| Zod               | 12KB      | +RHF 20KB    | 5KB     |
-| Yup               | 15KB      | +Formik 25KB | 6KB     |
-| Joi               | 145KB     | +Forms ∞     | 47KB    |
-| Valibot           | 1KB       | +RHF 20KB    | 0.5KB   |
+| Zod     | 12KB      | +RHF 20KB    | 5KB     |
+| Yup     | 15KB      | +Formik 25KB | 6KB     |
+| Joi     | 145KB     | +Forms ∞     | 47KB    |
+| Valibot | 1KB       | +RHF 20KB    | 0.5KB   |
 
 ## Why Choose rustica?
 
@@ -180,7 +180,7 @@ Why: Overkill for simple forms
 
 ## Feature Roadmap
 
-### v0.2.0 (Q2 2026)
+### v1.1.0 (Q2 2026)
 
 - [ ] Array schemas
 - [ ] Tuple schemas
@@ -189,7 +189,7 @@ Why: Overkill for simple forms
 - [ ] UUID validation
 - [ ] Date validation
 
-### v0.3.0 (Q3 2026)
+### v1.2.0 (Q3 2026)
 
 - [ ] Intersection types
 - [ ] Conditional validation
@@ -197,7 +197,7 @@ Why: Overkill for simple forms
 - [ ] Transform values
 - [ ] Coerce types
 
-### v0.4.0 (Q4 2026)
+### v1.3.0 (Q4 2026)
 
 - [ ] i18n support
 - [ ] Schema composition helpers
@@ -205,7 +205,7 @@ Why: Overkill for simple forms
 - [ ] File validation
 - [ ] Async validation wrappers
 
-### v1.0.0 (Q1 2027)
+### v1.4.0 (Q1 2027)
 
 - [ ] Stable API
 - [ ] Performance optimizations
@@ -219,14 +219,13 @@ Why: Overkill for simple forms
 
 ```typescript
 // Zod
-import { r } from "zod";
+import { z } from "zod";
 const schema = r.object({
   email: r.string().email(),
 });
 
 // rustica (nearly identical!)
 import { r, initWasm } from "rustica";
-await initWasm(); // Only difference
 const schema = r.object({
   email: r.string().email(),
 });
@@ -243,7 +242,6 @@ const schema = yup.object({
 
 // rustica
 import { r, initWasm } from "rustica";
-await initWasm();
 const schema = r.object({
   email: r.string().email(),
 });
