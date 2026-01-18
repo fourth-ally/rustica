@@ -26,7 +26,7 @@ A **production-grade Zod-like schema and form validation system** powered by Rus
 
 #### 3. TypeScript Schema Builder ✅
 
-- Fluent API: `z.string().min(3).email()`
+- Fluent API: `r.string().min(3).email()`
 - 4 schema types: String, Number, Boolean, Object
 - Full JSON serialization
 - UI metadata support

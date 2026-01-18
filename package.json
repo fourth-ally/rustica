@@ -1,6 +1,6 @@
 {
   "name": "rustica",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "description": "Production-grade schema validation powered by Rust and WebAssembly",
   "type": "module",
   "main": "./dist/index.js",

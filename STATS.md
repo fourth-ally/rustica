@@ -196,10 +196,10 @@ Total: 38 files, ~7,000 lines
 
 ### Schema Builders (4)
 
-- `z.string()` - String schema
-- `z.number()` - Number schema
-- `z.boolean()` - Boolean schema
-- `z.object()` - Object schema
+- `r.string()` - String schema
+- `r.number()` - Number schema
+- `r.boolean()` - Boolean schema
+- `r.object()` - Object schema
 
 ### Validator Methods (4)
 

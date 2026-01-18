@@ -7,7 +7,7 @@ A **production-grade Zod-like schema validation system** powered by Rust and Web
 ## Key Features
 
 ✅ **Rust-powered validation** - High-performance validation compiled to WASM  
-✅ **TypeScript schema builder** - Fluent API: `z.string().min(3).email()`  
+✅ **TypeScript schema builder** - Fluent API: `r.string().min(3).email()`  
 ✅ **Type inference** - Full TypeScript type safety with `Infer<T>`  
 ✅ **Zero-copy validation** - Single WASM call per validation  
 ✅ **React form hook** - Drop-in `useWasmForm` for form management  
@@ -122,24 +122,28 @@ function LoginForm() {
 ## Technical Highlights
 
 ### 1. Clean Separation of Concerns
+
 - **Rust**: Validation logic only
 - **WASM**: Thin JSON interface
 - **TypeScript**: Schema DSL, types, forms
 - **React**: Optional UI layer
 
 ### 2. Performance Optimizations
+
 - Single WASM call per validation
 - Zero-copy where possible
 - Optimized for size (`opt-level = "z"`)
 - ~100-200ms for 1000 validations
 
 ### 3. Developer Experience
+
 - Fluent API similar to Zod
 - Full TypeScript type inference
 - React Hook Form-style API
 - Comprehensive error messages
 
 ### 4. Production Quality
+
 - Comprehensive test coverage
 - Detailed documentation
 - Build automation (Makefile)
@@ -157,6 +161,7 @@ function LoginForm() {
 ## What's Included
 
 ### Core (Rust)
+
 - [x] String validation (min, max, email, url, pattern)
 - [x] Number validation (min, max, integer, positive)
 - [x] Boolean validation
@@ -165,24 +170,28 @@ function LoginForm() {
 - [x] Zod-like error structure
 
 ### WASM Interface
-- [x] `validate(schema, value)` 
+
+- [x] `validate(schema, value)`
 - [x] `validate_at_path(schema, value, path)`
 - [x] JSON-only interface
 - [x] Comprehensive tests
 
 ### TypeScript API
-- [x] Schema builders (`z.string()`, etc.)
+
+- [x] Schema builders (`r.string()`, etc.)
 - [x] Fluent API (`.min().email()`)
 - [x] Type inference (`Infer<T>`)
 - [x] UI metadata (`.ui()`)
 
 ### Validation
+
 - [x] `Validator.validate()`
 - [x] `Validator.validateAtPath()`
 - [x] `Validator.parse()` (throws)
 - [x] `Validator.safeParse()` (returns result)
 
 ### Form Runtime
+
 - [x] `createForm()` (framework-agnostic)
 - [x] Field state management
 - [x] Touch tracking
@@ -190,12 +199,14 @@ function LoginForm() {
 - [x] Subscribe to changes
 
 ### React Integration
+
 - [x] `useWasmForm()` hook
 - [x] Field registration
 - [x] Error display helpers
 - [x] React Hook Form-compatible API
 
 ### Documentation
+
 - [x] Getting Started guide
 - [x] Complete API reference
 - [x] Architecture documentation
@@ -203,6 +214,7 @@ function LoginForm() {
 - [x] Inline code comments
 
 ### Build & Tooling
+
 - [x] Makefile with commands
 - [x] Build scripts (CI-ready)
 - [x] Setup script
@@ -236,6 +248,7 @@ make dev           # Development mode
 ## Performance
 
 **Benchmarks (on M1 Mac):**
+
 - Cold start: ~5-10ms (with WASM init)
 - Warm validation: ~0.1-0.5ms
 - 1000 validations: ~100-200ms
@@ -268,7 +281,7 @@ make dev           # Development mode
 ✅ Production-quality code  
 ✅ No placeholders  
 ✅ Comprehensive comments  
-✅ Working examples  
+✅ Working examples
 
 ## Next Steps
 

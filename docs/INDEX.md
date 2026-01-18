@@ -19,7 +19,7 @@ Start here if you're new to rustica:
 ### API Reference
 
 - **[Complete API Reference](./API.md)**
-  - Schema builders (`z.string()`, `z.number()`, etc.)
+  - Schema builders (`r.string()`, `r.number()`, etc.)
   - Validator methods
   - Form runtime API
   - React hooks

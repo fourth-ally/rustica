@@ -29,10 +29,10 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 #### TypeScript Schema Builder
 
 - Fluent API with method chaining
-- `z.string()` - String schema builder
-- `z.number()` - Number schema builder
-- `z.boolean()` - Boolean schema builder
-- `z.object()` - Object schema builder
+- `r.string()` - String schema builder
+- `r.number()` - Number schema builder
+- `r.boolean()` - Boolean schema builder
+- `r.object()` - Object schema builder
 - UI metadata support with `.ui()` method
 - Full JSON serialization with `.toJSON()`
 

@@ -2,43 +2,44 @@
 
 ## Schema Builders
 
-### `z.string()`
+### `r.string()`
 
 Create a string schema with validation rules.
 
 ```typescript
-const schema = r.string()
-  .min(3)           // Minimum length
-  .max(100)         // Maximum length
-  .email()          // Email validation
-  .url()            // URL validation
-  .pattern('regex') // Pattern matching
-  .ui({ label: 'Name' }); // UI metadata
+const schema = r
+  .string()
+  .min(3) // Minimum length
+  .max(100) // Maximum length
+  .email() // Email validation
+  .url() // URL validation
+  .pattern("regex") // Pattern matching
+  .ui({ label: "Name" }); // UI metadata
 ```
 
-### `z.number()`
+### `r.number()`
 
 Create a number schema with validation rules.
 
 ```typescript
-const schema = r.number()
-  .min(0)          // Minimum value
-  .max(100)        // Maximum value
-  .integer()       // Must be integer
-  .positive()      // Must be positive
-  .ui({ label: 'Age' });
+const schema = r
+  .number()
+  .min(0) // Minimum value
+  .max(100) // Maximum value
+  .integer() // Must be integer
+  .positive() // Must be positive
+  .ui({ label: "Age" });
 ```
 
-### `z.boolean()`
+### `r.boolean()`
 
 Create a boolean schema.
 
 ```typescript
-const schema = r.boolean()
-  .ui({ label: 'Accept terms' });
+const schema = r.boolean().ui({ label: "Accept terms" });
 ```
 
-### `z.object()`
+### `r.object()`
 
 Create an object schema with nested fields.
 
@@ -46,7 +47,7 @@ Create an object schema with nested fields.
 const schema = r.object({
   name: r.string().min(2),
   email: r.string().email(),
-  age: r.number().min(18).integer()
+  age: r.number().min(18).integer(),
 });
 ```
 
@@ -57,7 +58,7 @@ Use the `Infer` utility to extract TypeScript types from schemas:
 ```typescript
 const userSchema = r.object({
   name: r.string(),
-  age: r.number()
+  age: r.number(),
 });
 
 type User = r.Infer<typeof userSchema>;
@@ -74,9 +75,9 @@ Validate data against a schema.
 const result = Validator.validate(schema, data);
 
 if (result.success) {
-  console.log('Valid!');
+  console.log("Valid!");
 } else {
-  console.log('Errors:', result.errors);
+  console.log("Errors:", result.errors);
 }
 ```
 
@@ -87,8 +88,8 @@ Validate a specific field in an object.
 ```typescript
 const result = Validator.validateAtPath(
   userSchema,
-  { name: 'John', email: 'invalid' },
-  ['email']
+  { name: "John", email: "invalid" },
+  ["email"],
 );
 ```
 
@@ -128,12 +129,12 @@ Create a framework-agnostic form instance.
 ```typescript
 const form = createForm({
   schema: userSchema,
-  defaultValues: { name: '', email: '' },
+  defaultValues: { name: "", email: "" },
   onSubmit: async (data) => {
     console.log(data);
   },
   validateOnBlur: true,
-  validateOnChange: false
+  validateOnChange: false,
 });
 
 // Access state
@@ -142,15 +143,15 @@ console.log(form.errors);
 console.log(form.touched);
 
 // Update values
-form.setValue('name', 'John');
-form.handleBlur('email');
+form.setValue("name", "John");
+form.handleBlur("email");
 
 // Submit
 await form.handleSubmit();
 
 // Subscribe to changes
 const unsubscribe = form.subscribe((state) => {
-  console.log('Form state changed:', state);
+  console.log("Form state changed:", state);
 });
 ```
 
@@ -174,7 +175,7 @@ function MyForm() {
     <form onSubmit={form.handleSubmit}>
       <input {...form.register('email')} />
       {form.errors.email && <span>{form.errors.email.message}</span>}
-      
+
       <button type="submit" disabled={form.isSubmitting}>
         Submit
       </button>
@@ -205,7 +206,7 @@ Register a field with the form. Returns props to spread on input elements.
 Programmatically set a field value.
 
 ```typescript
-form.setValue('email', 'test@example.com');
+form.setValue("email", "test@example.com");
 ```
 
 #### `setError(field, error)`
@@ -213,10 +214,10 @@ form.setValue('email', 'test@example.com');
 Programmatically set a field error (useful for async validation).
 
 ```typescript
-form.setError('email', {
-  path: ['email'],
-  code: 'custom',
-  message: 'Email already exists'
+form.setError("email", {
+  path: ["email"],
+  code: "custom",
+  message: "Email already exists",
 });
 ```
 
@@ -243,7 +244,7 @@ Reset form to initial state.
 Get error message for a field (returns null if not touched or no error).
 
 ```typescript
-const emailError = useFieldError(form, 'email');
+const emailError = useFieldError(form, "email");
 ```
 
 #### `useFieldHasError(form, field)`
@@ -251,7 +252,7 @@ const emailError = useFieldError(form, 'email');
 Check if field has an error.
 
 ```typescript
-const hasError = useFieldHasError(form, 'email');
+const hasError = useFieldHasError(form, "email");
 ```
 
 ## Initialization
@@ -261,7 +262,7 @@ const hasError = useFieldHasError(form, 'email');
 Initialize the WASM module. Must be called before validation.
 
 ```typescript
-import { initWasm } from 'rustica';
+import { initWasm } from "rustica";
 
 await initWasm();
 ```
@@ -271,7 +272,7 @@ await initWasm();
 Auto-initializing validator (convenience method).
 
 ```typescript
-import { createValidator } from 'rustica';
+import { createValidator } from "rustica";
 
 const Validator = await createValidator();
 const result = Validator.validate(schema, data);
@@ -283,9 +284,9 @@ Validation errors follow this structure:
 
 ```typescript
 interface ValidationError {
-  path: string[];      // Path to the field (e.g., ['user', 'email'])
-  code: string;        // Error code (e.g., 'string.email')
-  message: string;     // Human-readable message
+  path: string[]; // Path to the field (e.g., ['user', 'email'])
+  code: string; // Error code (e.g., 'string.email')
+  message: string; // Human-readable message
 }
 ```
 

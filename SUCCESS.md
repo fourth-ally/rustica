@@ -229,9 +229,9 @@ Full documentation available in `docs/`:
 ### Schema Building ✓
 
 ```typescript
-z.string().min(5).max(100).email();
-z.number().min(0).max(100).integer();
-z.object({ name: r.string(), age: r.number() });
+r.string().min(5).max(100).email();
+r.number().min(0).max(100).integer();
+r.object({ name: r.string(), age: r.number() });
 ```
 
 ### Validation ✓
