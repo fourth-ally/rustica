@@ -224,8 +224,8 @@ const schema = r.object({
   email: r.string().email(),
 });
 
-// rustica (nearly identical!)
-import { r, initWasm } from "rustica";
+// rustica
+import { r } from "rustica";
 const schema = r.object({
   email: r.string().email(),
 });
@@ -241,7 +241,7 @@ const schema = yup.object({
 });
 
 // rustica
-import { r, initWasm } from "rustica";
+import { r } from "rustica";
 const schema = r.object({
   email: r.string().email(),
 });
